@@ -26,7 +26,7 @@ void showGraph(string node_path, string edge_path){
                 for (int j = 0; j < stoi(total); j++) {
                     getline(myfile, s);
                     for (int i = 0; i < s.size(); i++) {
-                        if (i != 0) {
+                        if ((i != 0)&& (s[i]!='.') ) {
                             aux += s[i];
                         }
                         if (s[i] == ',') {
@@ -47,6 +47,7 @@ void showGraph(string node_path, string edge_path){
     }
     myfile.close();
     gv->rearrange();
+    cout<<"finished node import"<<endl;
 
     //EDGES - 2 PARAMETERS TO READ
     myfile.open (edge_path);
@@ -77,5 +78,6 @@ void showGraph(string node_path, string edge_path){
     }
     myfile.close();
     gv->rearrange();
+    cout<<"finished edge import"<<endl;
     getchar();
 }
