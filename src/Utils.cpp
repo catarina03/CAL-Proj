@@ -3,13 +3,11 @@
 //
 
 #include "Utils.h"
-#include <cstdio>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <vector>
 
-void showGraph(){
+void showGraph(string node_path, string edge_path){
     GraphViewer *gv = new GraphViewer(600, 600, false);
     gv->createWindow(600, 600);
     gv->defineVertexColor("blue");
@@ -21,7 +19,7 @@ void showGraph(){
 
     //NODES - 3 PARAMETERS TO READ
     ifstream myfile;
-    myfile.open ("../Maps/GridGraphs/4x4/nodes.txt");
+    myfile.open (node_path);
     if (myfile.is_open()){
         while(!myfile.eof()){
                 getline(myfile, total);
@@ -41,6 +39,7 @@ void showGraph(){
                         }
                     }
                     gv->addNode(tmp[0], tmp[1], tmp[2]);
+                    gv->rearrange();
                     tmp.clear();
                 }
                 break;
@@ -48,9 +47,9 @@ void showGraph(){
     }
     myfile.close();
     gv->rearrange();
-    
+
     //EDGES - 2 PARAMETERS TO READ
-    myfile.open ("../Maps/GridGraphs/4x4/edges.txt");
+    myfile.open (edge_path);
     if (myfile.is_open()){
         while(!myfile.eof()){
                 getline(myfile, total);
@@ -78,4 +77,5 @@ void showGraph(){
     }
     myfile.close();
     gv->rearrange();
+    getchar();
 }

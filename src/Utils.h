@@ -7,6 +7,6 @@
 
 #include "../src/GraphViewer/graphviewer.h"
 
-void showGraph();
+void showGraph(string node_path, string edge_path);
 
 #endif //CAL_PROJ_UTILS_H
