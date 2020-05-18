@@ -145,7 +145,7 @@ public:
 	//FP04
 
     vector<T> dfs (const T &origin, const T &dest);
-    vector<T> dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> &res);
+    int dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
 
     // Fp05 - single source
 	void unweightedShortestPath(const T &s);    //TODO...
@@ -474,20 +474,34 @@ vector<T> Graph<T>::dfs(const T &origin, const T &dest) {
         i->visited=false;
     }
 
-    return dfsVisit(this->findVertexByInfo(origin), this->findVertexByInfo(dest), path);
+    dfsVisit(this->findVertexByInfo(origin), this->findVertexByInfo(dest), &path);
+    return path;
 }
 
 template<class T>
-vector<T> Graph<T>::dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> &res){
+int Graph<T>::dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res){
     origin->visited=true;
-    res.push_back(origin->info);
-    if (origin==dest){
-        return res;
+    res->push_back(origin->info);
+    if (origin->info==dest->info){
+        return 0;
     }
+    int count=0;
     for (auto & e : origin->outgoing) {
         auto w = e.dest;
-        if ( ! w->visited)
-            return dfsVisit(w, dest, res);
+        if ( ! w->visited) {
+            count++;
+            if (dfsVisit(w, dest, res) != 0) {
+                origin->visited = true;
+                count = 0;
+
+            } else {
+                return 0;
+            }
+        }
+    }
+    if (count==0){
+        res->erase(res->end());
+        return -1;
     }
 }
 

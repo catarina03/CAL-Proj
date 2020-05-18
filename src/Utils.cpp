@@ -132,7 +132,7 @@ void showFullGraph(GraphViewer *gv, const string& node_path, const string& edge_
 }
 
 //template <class T>
-void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
+void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){/*
     GraphViewer *gv = new GraphViewer(600, 600, false);
     createGraph(gv);
 
@@ -175,6 +175,7 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
     gv->rearrange();
     getchar();
     gv->closeWindow();
+    */
 }
 
 
@@ -260,6 +261,7 @@ void edgeParser(const string& edge_path, Graph<Coordinates> *graph){
         }
     }
     myfile.close();
+
 }
 
 Graph<Coordinates> mapParser(const string& node_path, const string& edge_path){
@@ -267,4 +269,5 @@ Graph<Coordinates> mapParser(const string& node_path, const string& edge_path){
     nodeParser(node_path, &graph);
     edgeParser(edge_path, &graph);
     return graph;
+
 }

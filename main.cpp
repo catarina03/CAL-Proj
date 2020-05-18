@@ -8,9 +8,9 @@ int main() {
 
     std::cout << "Hello world" << std::endl;
 
-    Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/8x8/nodes.txt", "../Maps/GridGraphs/8x8/edges.txt");
-    vector<Coordinates> path=graph.dfs(make_pair(0,0),make_pair(332,222));
+    Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
+    vector<Coordinates> path=graph.dfs(make_pair(0,0),make_pair(37,111));
     //TODO:make bfs work with showGrapth ->some problem with the vector
-    showGraph(&graph, path);
+    //showGraph(&graph, path);
     return 0;
 };
