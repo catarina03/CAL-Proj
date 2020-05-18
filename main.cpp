@@ -1,15 +1,14 @@
 #include <iostream>
-#include <Utils.h>
-//#include <Graph.h>
+#include <csignal>
+#include "src/Utils.h"
+#include "src/Graph/Graph.h"
 
 int main() {
-    GraphViewer *gv = new GraphViewer(600, 600, false);
-    vector<int>tmp;
-    createGraph(gv); //creates window and default option for graph
-    std::cout << "Hello world" << std::endl;
-    showGraph(gv,"../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt", &tmp);
-    //showGraph(gv,"../Maps/PortugalMaps/Aveiro/nodes_lat_lon_aveiro.txt", "../Maps/PortugalMaps/Aveiro/edges_aveiro.txt", &tmp);
-    //showGraph(gv,"../Maps/PortugalMaps/Portugal/nodes_lat_lon_portugal.txt", "../Maps/PortugalMaps/Portugal/edges_portugal.txt", &tmp);
+    signal(SIGINT, SIG_IGN);  //NEEDED OR ELSE IT CRASHES UBUNTU
 
-    getchar();
+    std::cout << "Hello world" << std::endl;
+
+    Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/8x8/nodes.txt", "../Maps/GridGraphs/8x8/edges.txt");
+    showGraph(&graph);
+    return 0;
 };
