@@ -142,7 +142,12 @@ public:
 	int getNumVertex() const;
 	vector<Vertex<T> *> getVertexSet() const;
 
-	// Fp05 - single source
+	//FP04
+
+    vector<T> dfs (const T &origin, const T &dest);
+    vector<T> dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> &res);
+
+    // Fp05 - single source
 	void unweightedShortestPath(const T &s);    //TODO...
 	void dijkstraShortestPath(const T &s);      //TODO...
 	void bellmanFordShortestPath(const T &s);   //TODO...
@@ -152,6 +157,7 @@ public:
 	void floydWarshallShortestPath();   //TODO...
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;   //TODO...
 
+    //template<class T, class T, class T, class T, class T, class T>
 };
 
 
@@ -459,6 +465,30 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
         }
     }
     return res;
+}
+
+template<class T>
+vector<T> Graph<T>::dfs(const T &origin, const T &dest) {
+    vector<T> path;
+    for (auto i:vertexSet){
+        i->visited=false;
+    }
+
+    return dfsVisit(this->findVertexByInfo(origin), this->findVertexByInfo(dest), path);
+}
+
+template<class T>
+vector<T> Graph<T>::dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> &res){
+    origin->visited=true;
+    res.push_back(origin->info);
+    if (origin==dest){
+        return res;
+    }
+    for (auto & e : origin->outgoing) {
+        auto w = e.dest;
+        if ( ! w->visited)
+            return dfsVisit(w, dest, res);
+    }
 }
 
 

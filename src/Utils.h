@@ -21,7 +21,7 @@ void graphEdges(const string& edge_path,vector<int>*tmp);
 void showFullGraph(GraphViewer *gv, const string& node_path, const string& edge_path,vector<int>*tmp);
 
 //template <class T>
-void showGraph(Graph<Coordinates> *graph);
+void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res);
 void showGraphTry(Graph<Coordinates> *graph);
 
 //PARSE GRID MAP
