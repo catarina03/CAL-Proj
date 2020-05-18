@@ -124,9 +124,121 @@ void graphEdges(const string& edge_path,vector<int>*tmp){
 
 }
 
-void showGraph(GraphViewer *gv, const string& node_path, const string& edge_path,vector<int>*tmp) {
+void showFullGraph(GraphViewer *gv, const string& node_path, const string& edge_path,vector<int>*tmp) {
     graphNodes(node_path, tmp);
     addNodestoGraph(gv, tmp);
     graphEdges(edge_path,tmp);
     addEdgestoGraph(gv,tmp);
+}
+
+//template <class T>
+void showGraph(Graph<Coordinates> *graph){ //TESTING WITH JUST NODES
+    GraphViewer *gv = new GraphViewer(600, 600, false);
+    createGraph(gv);
+    int id = 0;
+    vector<Vertex<Coordinates> *> vertexSet = graph->getVertexSet();
+    for (auto v : vertexSet){
+        gv->addNode(v->getID(), v->getInfo().first, v->getInfo().second);
+    }
+    gv->rearrange();
+    for (auto v : vertexSet){
+        for (auto e : v->getOutgoing()){
+            gv->addEdge(id, v->getID(), e.getDest()->getID(), EdgeType::DIRECTED);
+            id++;
+        }
+    }
+    gv->rearrange();
+    getchar();
+    gv->closeWindow();
+}
+
+double euclideanDistance(pair<double, double> p1, pair<double, double> p2){
+    return sqrt(pow(p1.first - p2.first, 2) + pow(p1.second - p2.second, 2));
+}
+
+void nodeParser(const string& node_path, Graph<Coordinates> *graph) {
+    string s, aux, total;
+    vector<double> tmp;
+
+    //NODES - 3 PARAMETERS TO READ
+    ifstream myfile;
+    myfile.open(node_path);
+    if (myfile.is_open()) {
+        while (!myfile.eof()) {
+            getline(myfile, total);
+            for (int j = 0; j < stoi(total); j++) {
+                getline(myfile, s);
+                for (int i = 0; i < s.size(); i++) {
+
+                    if (s[i] == ',') {
+                        tmp.push_back(stoi(aux));
+                        aux.clear();
+                    }
+                    else {
+                        if (i == s.size() - 1) {
+                            tmp.push_back(stoi(aux));
+                            aux.clear();
+                        }
+                        else {
+                            if (i != 0) {
+                                aux += s[i];
+                            }
+                        }
+                    }
+                }
+                graph->addVertex(tmp.at(0), make_pair(tmp.at(1), tmp.at(2)));
+                tmp.clear();
+            }
+            break;
+        }
+    }
+    myfile.close();
+}
+
+void edgeParser(const string& edge_path, Graph<Coordinates> *graph){
+    //EDGES - 2 PARAMETERS TO READ
+    string s, aux, total;
+    vector<int> tmp;
+    ifstream myfile;
+
+    myfile.open (edge_path);
+    if (myfile.is_open()){
+        while(!myfile.eof()){
+            getline(myfile, total);
+            for (int j = 0; j < stoi(total); j++) {
+                getline(myfile, s);
+                //tmp->push_back(id);
+                for (int i = 0; i < s.size(); i++) {
+
+                    if (s[i] == ',') {
+                        tmp.push_back(stoi(aux));
+                        aux.clear();
+                    }
+                    else {
+                        if (i == s.size() - 1) {
+                            tmp.push_back(stoi(aux));
+                            aux.clear();
+                        }
+                        else {
+                            if (i != 0) {
+                                aux += s[i];
+                            }
+                        }
+                    }
+                }
+                double result = euclideanDistance(graph->findVertexByID(tmp.at(0))->getInfo(), graph->findVertexByID(tmp.at(1))->getInfo());
+                graph->addEdgeByID(tmp.at(0), tmp.at(1), result);
+                tmp.clear();
+            }
+            break;
+        }
+    }
+    myfile.close();
+}
+
+Graph<Coordinates> mapParser(const string& node_path, const string& edge_path){
+    Graph<Coordinates> graph;
+    nodeParser(node_path, &graph);
+    edgeParser(edge_path, &graph);
+    return graph;
 }
