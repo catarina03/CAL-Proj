@@ -8,7 +8,8 @@ int main() {
 
     std::cout << "Welcome to MeetUpRider!" << std::endl;
 
-    //Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
+    Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
+    vector<Coordinates> path=graph.nearestNeighbour(make_pair(0,0),make_pair(185,592)); //Works in 4x4 and 8x8 and 16x16
     //vector<Coordinates> path=graph.dfs(make_pair(0,0),make_pair(333,222)); //Works in 4x4 and 8x8 and 16x16
 
     //graph.dijkstraShortestPathByID(0);

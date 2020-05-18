@@ -143,6 +143,10 @@ public:
 	int getNumVertex() const;
 	vector<Vertex<T> *> getVertexSet() const;
 
+    vector<T> nearestNeighbour(const T &origin, const T &destiny);
+
+    int nearestNeighbourAux(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
+
 	//FP04
 
     vector<T> dfs (const T &origin, const T &dest);
@@ -542,5 +546,37 @@ int Graph<T>::dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res){
     }
 }
 
+template<class T>
+vector<T> Graph<T>::nearestNeighbour(const T &origin, const T &destiny){
+    auto orig=findVertexByInfo(origin);
+    auto dest=findVertexByInfo(destiny);
+    vector<T>path;
+
+    for (auto w:this->vertexSet){
+        w->visited=false;
+    }
+    nearestNeighbourAux(orig, dest, &path);
+    return path;
+}
+
+template<class T>
+int Graph<T>::nearestNeighbourAux(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res){
+    while(origin->info!=dest->info){
+        origin->visited=true;
+        res->push_back(origin->info);
+        auto shortest_path=origin->outgoing[0];
+        for (auto w:origin->outgoing){
+            if (w.weight<shortest_path.weight){
+                if(!(w.dest->visited)) {
+                    shortest_path = w;
+                }
+            }
+        }
+        origin=shortest_path.dest;
+        if (origin->visited){
+            return -1;
+        }
+    }
+}
 
 #endif /* GRAPH_H_ */
