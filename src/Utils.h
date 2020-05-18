@@ -20,9 +20,8 @@ void graphNodes(const string& node_path,vector<int>*tmp);
 void graphEdges(const string& edge_path,vector<int>*tmp);
 void showFullGraph(GraphViewer *gv, const string& node_path, const string& edge_path,vector<int>*tmp);
 
-//template <class T>
-void showGraph(Graph<Coordinates> *graph);
-void showGraphTry(Graph<Coordinates> *graph);
+//template<class T>
+void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res);
 
 //PARSE GRID MAP
 double euclideanDistance(pair<double, double> p1, pair<double, double> p2);

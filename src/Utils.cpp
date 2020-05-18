@@ -131,28 +131,53 @@ void showFullGraph(GraphViewer *gv, const string& node_path, const string& edge_
     addEdgestoGraph(gv,tmp);
 }
 
-//template <class T>
-void showGraph(Graph<Coordinates> *graph){ //TESTING WITH JUST NODES
+//template<class T>
+void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
     GraphViewer *gv = new GraphViewer(600, 600, false);
     createGraph(gv);
+
     int id = 0;
     vector<Vertex<Coordinates> *> vertexSet = graph->getVertexSet();
-    for (auto v : vertexSet){
-        gv->addNode(v->getID(), v->getInfo().first, v->getInfo().second);
-    }
-    gv->rearrange();
-    for (auto v : vertexSet){
-        for (auto e : v->getOutgoing()){
-            gv->addEdge(id, v->getID(), e.getDest()->getID(), EdgeType::DIRECTED);
-            id++;
+    if (res.empty()){
+        for (auto v : vertexSet){
+            gv->addNode(v->getID(), v->getInfo().first, v->getInfo().second);
+        }
+        for (auto v : vertexSet){
+            for (auto e : v->getOutgoing()){
+                gv->addEdge(id, v->getID(), e.getDest()->getID(), EdgeType::DIRECTED);
+                id++;
+            }
         }
     }
+    else{
+        for (Vertex<Coordinates>* v : vertexSet){
+            gv->addNode(v->getID(), v->getInfo().first, v->getInfo().second);
+            if (find(res.begin(), res.end(), v->getInfo()) != res.end()){
+                gv->setVertexColor(v->getID(), "red");
+            }
+        }
+        for (auto v : vertexSet){
+            for (auto e : v->getOutgoing()){
+                gv->addEdge(id, v->getID(), e.getDest()->getID(), EdgeType::DIRECTED);
+                if (find(res.begin(), res.end(), v->getInfo()) != res.end() && find(res.begin(), res.end(), e.getDest()->getInfo()) != res.end()){
+                    gv->setEdgeColor(id, "red");
+                }
+                id++;
+            }
+        }
+        Vertex<Coordinates>* v1 = graph->findVertexByInfo(res[0]);
+        Vertex<Coordinates>* v2 = graph->findVertexByInfo(res[res.size()-1]);
+        gv->setVertexColor(v1->getID(), "green");
+        gv->setVertexColor(v2->getID(), "green");
+
+    }
+
     gv->rearrange();
     getchar();
     gv->closeWindow();
 }
 
-double euclideanDistance(pair<double, double> p1, pair<double, double> p2){
+double euclideanDistance(pair<double, double> p1, pair<double, double> p2) {
     return sqrt(pow(p1.first - p2.first, 2) + pow(p1.second - p2.second, 2));
 }
 

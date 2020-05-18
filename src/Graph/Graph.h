@@ -10,6 +10,7 @@
 #include <climits>
 #include <cmath>
 #include <stack>
+#include <algorithm>
 #include "MutablePriorityQueue.h"
 
 using namespace std;
@@ -144,13 +145,16 @@ public:
 
 	// Fp05 - single source
 	void unweightedShortestPath(const T &s);    //TODO...
-	void dijkstraShortestPath(const T &s);      //TODO...
+	void dijkstraShortestPath(const T &s);
+    void dijkstraShortestPathByID(const int s);
 	void bellmanFordShortestPath(const T &s);   //TODO...
 	vector<T> getPathTo(const T &dest) const;   //TODO...
 
 	// Fp05 - all pairs
 	void floydWarshallShortestPath();   //TODO...
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;   //TODO...
+
+	void filterGraph();
 
 };
 
@@ -259,7 +263,7 @@ void Graph<T>::dijkstraShortestPath(const T &origin) { //DONE
 	    vertex->visited = false;
 	}
 
-	Vertex<T> * orig = findVertex(origin);
+	Vertex<T> * orig = findVertexByInfo(origin);
 	orig->dist = 0;
 	orig->visited = true;
 	MutablePriorityQueue<Vertex<T> > q;
@@ -282,6 +286,40 @@ void Graph<T>::dijkstraShortestPath(const T &origin) { //DONE
 	        }
 	    }
 	}
+}
+
+
+template<class T>
+void Graph<T>::dijkstraShortestPathByID(const int origin) { //DONE
+    for (Vertex<T> * vertex : vertexSet) {
+        vertex->dist = INT_MAX;
+        vertex->path = NULL;
+        vertex->visited = false;
+    }
+
+    Vertex<T> * orig = findVertexByID(origin);
+    orig->dist = 0;
+    orig->visited = true;
+    MutablePriorityQueue<Vertex<T> > q;
+    q.insert(orig);
+    Vertex<T> * min;
+
+    while(!q.empty()){
+        min = q.extractMin();
+        for (Edge<T> adj : min->outgoing){
+            if (adj.dest->dist > min->dist + adj.weight) {
+                adj.dest->dist = min->dist + adj.weight;
+                adj.dest->path = min;
+                if (adj.dest->visited){
+                    q.decreaseKey(adj.dest);
+                }
+                else{
+                    q.insert(adj.dest);
+                    adj.dest->visited = true;
+                }
+            }
+        }
+    }
 }
 
 
@@ -318,7 +356,7 @@ template<class T>
 vector<T> Graph<T>::getPathTo(const T &dest) const{  //DONE
 	vector<T> res;
 
-	Vertex<T> * destination = findVertex(dest);
+	Vertex<T> * destination = findVertexByInfo(dest);
 	res.push_back(destination->info);
 
 	while (destination->getPath() != NULL){
