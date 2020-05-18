@@ -131,8 +131,8 @@ void showFullGraph(GraphViewer *gv, const string& node_path, const string& edge_
     addEdgestoGraph(gv,tmp);
 }
 
-//template <class T>
-void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){/*
+//template<class T>
+void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
     GraphViewer *gv = new GraphViewer(600, 600, false);
     createGraph(gv);
 
@@ -175,11 +175,10 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){/*
     gv->rearrange();
     getchar();
     gv->closeWindow();
-    */
+
 }
 
-
-double euclideanDistance(pair<double, double> p1, pair<double, double> p2){
+double euclideanDistance(pair<double, double> p1, pair<double, double> p2) {
     return sqrt(pow(p1.first - p2.first, 2) + pow(p1.second - p2.second, 2));
 }
 
