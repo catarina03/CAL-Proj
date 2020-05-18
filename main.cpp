@@ -12,7 +12,7 @@ int main() {
     //showGraph(&graph);
     graph.dijkstraShortestPathByID(0);
     //vector<Coordinates> path = graph.getPathTo(make_pair(300, 600)); //Works in 4x4 and 8x8
-    vector<Coordinates> path = graph.getPathTo(make_pair(333, 222)); //Works in 4x4 and 8x8
+    vector<Coordinates> path = graph.getPathTo(make_pair(333, 222)); //Works in 16x16
     showGraph(&graph, path);
     return 0;
 };
