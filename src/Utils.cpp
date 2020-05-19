@@ -175,6 +175,7 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
     gv->rearrange();
     getchar();
     gv->closeWindow();
+
 }
 
 double euclideanDistance(pair<double, double> p1, pair<double, double> p2) {
@@ -259,6 +260,7 @@ void edgeParser(const string& edge_path, Graph<Coordinates> *graph){
         }
     }
     myfile.close();
+
 }
 
 Graph<Coordinates> mapParser(const string& node_path, const string& edge_path){
@@ -266,4 +268,5 @@ Graph<Coordinates> mapParser(const string& node_path, const string& edge_path){
     nodeParser(node_path, &graph);
     edgeParser(edge_path, &graph);
     return graph;
+
 }
