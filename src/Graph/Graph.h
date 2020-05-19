@@ -143,7 +143,12 @@ public:
 	int getNumVertex() const;
 	vector<Vertex<T> *> getVertexSet() const;
 
-	// Fp05 - single source
+	//FP04
+
+    vector<T> dfs (const T &origin, const T &dest);
+    int dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
+
+    // Fp05 - single source
 	void unweightedShortestPath(const T &s);    //TODO...
 	void dijkstraShortestPath(const T &s);
     void dijkstraShortestPathByID(const int s);
@@ -497,6 +502,44 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
         }
     }
     return res;
+}
+
+template<class T>
+vector<T> Graph<T>::dfs(const T &origin, const T &dest) {
+    vector<T> path;
+    for (auto i:vertexSet){
+        i->visited=false;
+    }
+
+    dfsVisit(this->findVertexByInfo(origin), this->findVertexByInfo(dest), &path);
+    return path;
+}
+
+template<class T>
+int Graph<T>::dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res){
+    origin->visited=true;
+    res->push_back(origin->info);
+    if (origin->info==dest->info){
+        return 0;
+    }
+    int count=0;
+    for (auto & e : origin->outgoing) {
+        auto w = e.dest;
+        if ( ! w->visited) {
+            count++;
+            if (dfsVisit(w, dest, res) != 0) {
+                origin->visited = true;
+                count = 0;
+
+            } else {
+                return 0;
+            }
+        }
+    }
+    if (count==0){
+        res->erase(res->end());
+        return -1;
+    }
 }
 
 
