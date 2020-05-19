@@ -9,6 +9,10 @@ int main() {
     std::cout << "Hello world" << std::endl;
 
     Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/8x8/nodes.txt", "../Maps/GridGraphs/8x8/edges.txt");
+
+    graph.floydWarshallShortestPath();
+    auto path=graph.getfloydWarshallPath()
+
     showGraph(&graph);
     return 0;
 };

@@ -8,6 +8,7 @@
 #include <queue>
 #include <list>
 #include <climits>
+#include <cfloat>
 #include <cmath>
 #include <stack>
 #include "MutablePriorityQueue.h"
@@ -337,21 +338,22 @@ vector<T> Graph<T>::getPathTo(const T &dest) const{  //DONE
 
 template<class T>
 void Graph<T>::floydWarshallShortestPath() { //DONE?
-	// TODO
+    // TODO
+    this->v_distance = new vector<vector<double>>;
+    this->path = new vector<vector<T>>;
 
     // Distance initialization
     for (int i = 0; i < this->vertexSet.size(); i++) {
-        vector<double> tmp;
-        vector<int> tmp2;
-        for (int j = 0; j < this->vertexSet.size(); j++) {
-            tmp.push_back(10000000);
+        vector<double> tmp[vertexSet.size()][vertexSet.size()];
+        vector<int> tmp2[vertexSet.size()][vertexSet.size()];
+        for (unsigned j = 0; j < this->vertexSet.size(); j++) {
+            tmp.push_back(DBL_MAX);
             tmp2.push_back(-1);
             if (i == j) {
                 tmp[j] = 0;
                 tmp2[j] = i;
-            }
-            else
-                for (auto& w : this->vertexSet[i]->adj)
+            } else
+                for (auto &w : this->vertexSet[i]->adj)
                     if (w.dest == this->vertexSet[j]) {
                         tmp[j] = w.weight;
                         tmp2[j] = i;
@@ -366,77 +368,32 @@ void Graph<T>::floydWarshallShortestPath() { //DONE?
     for (int k = 1; k < this->vertexSet.size(); k++) {
         for (int i = 0; i < this->vertexSet.size(); i++)
             for (int j = 0; j < this->vertexSet.size(); j++) {
+                if (v_distance[i][k] > DBL_MAX - v_distance[k][j]) {
+                    continue; //avoid overflow
+                }
                 if (this->v_distance[i][j] > this->v_distance[i][k] + this->v_distance[k][j]) {
                     this->v_distance[i][j] = this->v_distance[i][k] + this->v_distance[k][j];
-                    this->path[i][j] = k;
+                    this->path[i][j] = k; //TODO: not sure what it means understand, is it the id of the node it must take?
                 }
             }
     }
-
-	/*
-	vector<vector<double>> v_distance;
-	vector<vector<int>> v_path;
-	for (unsigned i = 0; i < vertexSet.size(); i++){
-	    vector<double> aux_d;
-	    vector<int> aux_p;
-        for (unsigned j = 0; j < vertexSet.size(); j++){
-            v_distance[i].push_back(INT_MAX);
-            v_path[i].push_back(-1);
-            if (i == j){
-                v_distance[i][j] = 0;
-                v_path[i][j] = i; //O path é o próprio
-            }
-            else{
-                for (auto v: vertexSet[i]->adj){
-                    if (v.dest == vertexSet[j]){
-                        v_distance[i][j] = v.weight;
-                        v_path[i][j] = i;
-                    }
-                }
-            }
-        }
-	}
-    for (unsigned k = 0; k < vertexSet.size(); k++){
-        for (unsigned i = 0; i < vertexSet.size(); i++){
-            for (unsigned j = 0; j < vertexSet.size(); j++){
-                if (v_distance[i][k] + v_distance[k][j] < v_distance[i][j]) {
-                    v_distance[i][j] = v_distance[i][k] + v_distance[k][j];
-                    v_path[i][j] = k;
-                }
-            }
-        }
-    }
-
-    for (int i = 0; i < v_distance.size(); i++){
-            this->v_distance.push_back(v_distance[i]);
-            this->path.push_back(v_path[i]);
-    }
-    */
 }
 
 template<class T>
 vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
-	/*
-	Vertex<T> origin = findVertex(orig);
-	Vertex<T> destination = findVertex(dest);
 
-
+	Vertex<T> origin = findVertexByInfo(orig);
+	Vertex<T> destination = findVertexByInfo(dest);
 
     vector<T> res;
 	// TODO
-	return res;
-	 */
 
-    vector<T> res;
-    Vertex<T> *v = findVertex(dest);
-    int i, j;
-    for (i = 0; i < this->vertexSet.size(); i++)
-        if (orig == this->vertexSet[i]->info)
-            break;
-    for (j = 0; j < this->vertexSet.size(); j++)
-        if (dest == this->vertexSet[j]->info)
-            break;
+    int i=origin.getID();
+    int j=destination.getID();
 
+    if (v_distance[i][j]==DBL_MAX){
+        return res;
+    }
     if (i < j) {
         stack<int> stack;
         int path = j;
