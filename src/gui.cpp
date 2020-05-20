@@ -84,7 +84,8 @@ void passengerMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
 
     string destinationPassenger;
-    cin >> originPassenger;
+    cin >> destinationPassenger;
+
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -212,7 +213,7 @@ void driverMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
 
     string destinationDriver;
-    cin >> originDriver;
+    cin >> destinationDriver;
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -340,6 +341,7 @@ void driverMenu(Application &application) {
 
     int choice;
     cin >> choice;
+
     if(choice == 1){
 
         if(!application.findRide()){    //se o processamento dos dados retornar sucesso
