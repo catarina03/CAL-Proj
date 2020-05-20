@@ -10,6 +10,7 @@ int main() {
     std::cout << "Welcome to MeetUpRider!" << std::endl;
     Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
 
+
     //Dijkstra
     /*
     graph.dijkstraShortestPathByID(0);
