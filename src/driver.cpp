@@ -3,7 +3,6 @@
 //
 
 #include "driver.h"
-using namespace std;
 
 Driver::Driver(string originDriver, string destinationDriver, int earliestDepartureTime, int latestDepartureTime,
                int maxDetourDistance, string vehicleId, int vehicleCapacity) {
