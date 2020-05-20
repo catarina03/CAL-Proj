@@ -131,8 +131,10 @@ Vertex<T>* Edge<T>::getDest() const {
 template <class T>
 class Graph {
 	vector<Vertex<T> *> vertexSet;    // vertex set
-    vector<vector<double>> v_distance;      //Floyd Warshal matrix
-    vector<vector<T>> path; //Floyd Warshal return path
+    double ** v_distance = nullptr;//floyd-warshall
+    int **path = nullptr;
+
+
 
 
 public:
@@ -229,6 +231,16 @@ bool Graph<T>::addEdgeByID(const int sourc, const int dest, double w) {
         return false;
     v1->addEdge(v2,w);
     return true;
+}
+
+template <class T>
+void deleteMatrix(T **m, int n) {
+    if (m != nullptr) {
+        for (int i = 0; i < n; i++)
+            if (m[i] != nullptr)
+                delete [] m[i];
+        delete [] m;
+    }
 }
 
 
@@ -380,86 +392,54 @@ vector<T> Graph<T>::getPathTo(const T &dest) const{  //DONE
 /**************** All Pairs Shortest Path  ***************/
 
 template<class T>
-void Graph<T>::floydWarshallShortestPath() { //DONE?
-    // TODO
-    this->v_distance = new vector<vector<double>>;
-    this->path = new vector<vector<T>>;
+void Graph<T>::floydWarshallShortestPath() {
+    unsigned n = vertexSet.size();
+    deleteMatrix(v_distance, n);
+    deleteMatrix(path, n);
+    v_distance = new double *[n];
+    path = new int *[n];
 
-    // Distance initialization
-    for (int i = 0; i < this->vertexSet.size(); i++) {
-        vector<double> tmp[vertexSet.size()][vertexSet.size()];
-        vector<int> tmp2[vertexSet.size()][vertexSet.size()];
-        for (unsigned j = 0; j < this->vertexSet.size(); j++) {
-            tmp.push_back(DBL_MAX);
-            tmp2.push_back(-1);
-            if (i == j) {
-                tmp[j] = 0;
-                tmp2[j] = i;
-            } else
-                for (auto &w : this->vertexSet[i]->adj)
-                    if (w.dest == this->vertexSet[j]) {
-                        tmp[j] = w.weight;
-                        tmp2[j] = i;
-                    }
-
+    for (unsigned i = 0; i < n; i++) {
+        v_distance[i] = new double[n];
+        path[i] = new int[n];
+        for (unsigned j = 0; j < n; j++) {
+            v_distance[i][j] = i == j? 0 : INF;
+            path[i][j] = -1;
         }
-        this->v_distance.push_back(tmp);
-        this->path.push_back(tmp2);
+        for (auto e : vertexSet[i]->outgoing) {
+            int j = findVertexByInfo(e.dest->info)->getID();
+            v_distance[i][j] = e.weight;
+            path[i][j] = i;
+        }
     }
-
-
-    for (int k = 1; k < this->vertexSet.size(); k++) {
-        for (int i = 0; i < this->vertexSet.size(); i++)
-            for (int j = 0; j < this->vertexSet.size(); j++) {
-                if (v_distance[i][k] > DBL_MAX - v_distance[k][j]) {
-                    continue; //avoid overflow
-                }
-                if (this->v_distance[i][j] > this->v_distance[i][k] + this->v_distance[k][j]) {
-                    this->v_distance[i][j] = this->v_distance[i][k] + this->v_distance[k][j];
-                    this->path[i][j] = k; //TODO: not sure what it means understand, is it the id of the node it must take?
+    for(unsigned k = 0; k < n; k++)
+        for(unsigned i = 0; i < n; i++)
+            for(unsigned j = 0; j < n; j++) {
+                if(v_distance[i][k] == INF || v_distance[k][j] == INF)
+                    continue; // avoid overflow
+                int val = v_distance[i][k] + v_distance[k][j];
+                if (val < v_distance[i][j]) {
+                    v_distance[i][j] = val;
+                    path[i][j] = path[k][j];
                 }
             }
-    }
+
 }
+
 
 template<class T>
 vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
-
-	Vertex<T> origin = findVertexByInfo(orig);
-	Vertex<T> destination = findVertexByInfo(dest);
-
     vector<T> res;
-	// TODO
-
-    int i=origin.getID();
-    int j=destination.getID();
-
-    if (v_distance[i][j]==DBL_MAX){
+    int i = findVertexByInfo(orig)->getID();
+    int j = findVertexByInfo(dest)->getID();
+    if (i == -1 || j == -1 || v_distance[i][j] == INF) // missing or disconnected
         return res;
-    }
-    if (i < j) {
-        stack<int> stack;
-        int path = j;
-        stack.push(j);
-        while (path != i) {
-            path = this->path[i][path];
-            stack.push(path);
-        }
-        while (!stack.empty()) {
-            res.push_back(this->vertexSet[stack.top()]->info);
-            stack.pop();
-        }
-    }
-    else {
-        int path = i;
-        res.push_back(this->vertexSet[i]->info);
-        while (path != j) {
-            path = this->path[path][j];
-            res.push_back(this->vertexSet[path]->info);
-        }
-    }
+    for ( ; j != -1; j = path[i][j])
+        res.push_back(vertexSet[j]->info);
+    reverse(res.begin(), res.end());
     return res;
 }
+
 
 template<class T>
 vector<T> Graph<T>::dfs(const T &origin, const T &dest) {
