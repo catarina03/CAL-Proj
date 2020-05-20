@@ -8,7 +8,7 @@
 
 #include "passenger.h"
 #include "driver.h"
-#include <list>
+#include <vector>
 #include "Graph/Graph.h"
 #include "Utils/Utils.h"
 #include "Utils/Visualization.h"
@@ -17,8 +17,8 @@
 class Application {
 public:
     string name;
-    list<Passenger *> passengers;
-    list<Driver *> drivers;
+    vector<Passenger *> passengers;
+    vector<Driver *> drivers;
 
     explicit Application(string name);
 
@@ -32,6 +32,9 @@ public:
 
     int findRide();
     void showResults();
+
+    void updatePassengerRecord(Passenger *passenger);
+    void updateDriverRecord(Driver *driver);
 };
 
 
