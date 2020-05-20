@@ -11,6 +11,7 @@ using namespace std;
 
 class Driver {
 public:
+    int driverID;  //NIF of the user (which is already guaranteed to be unique)
     string originDriver;
     string destinationDriver;
     int earliestDepartureTime;
@@ -19,8 +20,9 @@ public:
     string vehicleId;  //license plate number
     int vehicleCapacity;
 
-    Driver(string originDriver, string destinationDriver, int earliestDepartureTime, int latestDepartureTime, int maxDetourDistance, string vehicleId, int vehicleCapacity);
+    Driver(int driverID, string originDriver, string destinationDriver, int earliestDepartureTime, int latestDepartureTime, int maxDetourDistance, string vehicleId, int vehicleCapacity);
 
+    int getDriverID();
     string getOriginDriver();
     string getDestinationDriver();
     int getEarliestDepartureTime();

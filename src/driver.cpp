@@ -4,8 +4,8 @@
 
 #include "driver.h"
 
-Driver::Driver(string originDriver, string destinationDriver, int earliestDepartureTime, int latestDepartureTime,
-               int maxDetourDistance, string vehicleId, int vehicleCapacity) {
+Driver::Driver(int driverID, string originDriver, string destinationDriver, int earliestDepartureTime, int latestDepartureTime,
+               int maxDetourDistance, string vehicleId, int vehicleCapacity):driverID(driverID) {
     this->originDriver = originDriver;
     this->destinationDriver = destinationDriver;
     this->earliestDepartureTime = earliestDepartureTime;
@@ -13,6 +13,10 @@ Driver::Driver(string originDriver, string destinationDriver, int earliestDepart
     this->maxDetourDistance = maxDetourDistance;
     this->vehicleId = vehicleId;
     this->vehicleCapacity = vehicleCapacity;
+}
+
+int Driver::getDriverID() {
+    return this->driverID;
 }
 
 string Driver::getOriginDriver() {

@@ -5,10 +5,11 @@
 #include "passenger.h"
 #include "driver.h"
 #include <iostream>
+#include "Application.h"
 using namespace std;
 
 
-void startMenu() {
+void startMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
@@ -31,15 +32,15 @@ void startMenu() {
 
     switch(choice){
         case 1: {
-            passengerMenu();
+            passengerMenu(application);
             break;
         }
         case 2: {
-            driverMenu();
+            driverMenu(application);
             break;
         }
         case 3: {
-            helpMenu();
+            helpMenu(application);
             break;
         }
         case 4: {
@@ -52,7 +53,7 @@ void startMenu() {
 
 }
 
-void passengerMenu() {
+void passengerMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
@@ -117,7 +118,25 @@ void passengerMenu() {
     int latestDepartureTime;
     cin >> latestDepartureTime;
 
-    Passenger(originPassenger, destinationPassenger, earliestDepartureTime, latestDepartureTime);
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||                 MeetUpRider                ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||            Please enter your NIF           ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+
+    int passengerID;
+    cin >> passengerID;
+
+    Passenger newPassenger(passengerID, originPassenger, destinationPassenger, earliestDepartureTime, latestDepartureTime);
+    Passenger *ptrToNewPassenger = &newPassenger;
+    application.addPassenger(ptrToNewPassenger);
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -125,23 +144,33 @@ void passengerMenu() {
     cout << "||||||||||                 MeetUpRider                ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
-    cout << "||||||||||               1) Find a ride!              ||||||||||" << endl;
+    cout << "||||||||||              1) Find a ride!               ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
-    cout << "||||||||||               2) Exit                      ||||||||||" << endl;;
+    cout << "||||||||||              2) Go back to main menu       ||||||||||" << endl;;
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
 
-    /*
+
+
      int choice;
-     cin >> choice
+     cin >> choice;
      if(choice == 1){
-      findRide();
+
+         if(!application.findRide()){    //se o processamento dos dados retornar sucesso
+             application.showResults();
+         }
+         else{
+             exit(2);  //processamento dos dados falhou
+         }
      }
-     */
+     else{
+         startMenu(application);
+     }
+
 }
 
-void driverMenu() {
+void driverMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
@@ -254,7 +283,26 @@ void driverMenu() {
     int vehicleCapacity;
     cin >> vehicleCapacity;
 
-    Driver(originDriver, destinationDriver, earliestDepartureTime, latestDepartureTime, maxDetourDistance, vehicleId, vehicleCapacity);
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||                 MeetUpRider                ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||            Please enter your NIF           ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+
+    int driverID;
+    cin >> driverID;
+
+    Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTime, latestDepartureTime, maxDetourDistance, vehicleId, vehicleCapacity);
+    Driver *ptrToNewDriver = &newDriver;
+    application.addDriver(ptrToNewDriver);
+
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -262,23 +310,30 @@ void driverMenu() {
     cout << "||||||||||                 MeetUpRider                ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
-    cout << "||||||||||               1) Find a ride!              ||||||||||" << endl;
+    cout << "||||||||||             1) Find a ride!                ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
-    cout << "||||||||||               2) Exit                      ||||||||||" << endl;;
+    cout << "||||||||||             2) Go back to main menu        ||||||||||" << endl;;
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
 
-    /*
-     int choice;
-     cin >> choice
-     if(choice == 1){
-      findRide();
-     }
-     */
+    int choice;
+    cin >> choice;
+    if(choice == 1){
+
+        if(!application.findRide()){    //se o processamento dos dados retornar sucesso
+            application.showResults();
+        }
+        else{
+            exit(2);  //processamento dos dados falhou
+        }
+    }
+    else{
+        startMenu(application);
+    }
 }
 
-void helpMenu() {
+void helpMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
@@ -305,10 +360,10 @@ void helpMenu() {
     int choice;
     cin >> choice;
     if(choice == 0){
-        startMenu();
+        startMenu(application);
     }
     else{
         cout << "Please enter '0' to go back :)" << endl;
-        helpMenu();
+        helpMenu(application);
     }
 }

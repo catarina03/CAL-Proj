@@ -10,13 +10,15 @@ using namespace std;
 
 class Passenger {
 public:
+    int passengerID; //NIF of the user (which is already guaranteed to be unique)
     string originPassenger;
     string destinationPassenger;
     int earliestDepartureTime;
     int latestDepartureTime;
 
-    Passenger(string originPassenger, string destinationPassenger, int earliestDepartureTime, int latestDepartureTime);
+    Passenger(int passengerID, string originPassenger, string destinationPassenger, int earliestDepartureTime, int latestDepartureTime);
 
+    int getPassengerID();
     string getOriginPassenger();
     string getDestinationPassenger();
     int getEarliestDepartureTime();

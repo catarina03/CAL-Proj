@@ -5,9 +5,11 @@
 #ifndef CAL_PROJ_GUI_H
 #define CAL_PROJ_GUI_H
 
-void startMenu();
-void passengerMenu();
-void driverMenu();
-void helpMenu();
+#include "Application.h"
+
+void startMenu(Application &application);
+void passengerMenu(Application &application);
+void driverMenu(Application &application);
+void helpMenu(Application &application);
 
 #endif //CAL_PROJ_GUI_H
