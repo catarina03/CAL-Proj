@@ -1,10 +1,8 @@
 //
-// Created by catarina03 on 13/05/20.
+// Created by catarina03 on 18/05/20.
 //
 
-#include "Utils.h"
-
-//#include <Graph.h>
+#include "Visualization.h"
 
 void createGraph(GraphViewer *gv,int width, int height){
     gv->createWindow(width, height);
@@ -94,28 +92,28 @@ void graphEdges(const string& edge_path,vector<int>*tmp){
     myfile.open (edge_path);
     if (myfile.is_open()){
         while(!myfile.eof()){
-                getline(myfile, total);
-                for (int j = 0; j < stoi(total); j++) {
-                    getline(myfile, s);
-                    tmp->push_back(id);
-                    for (int i = 0; i < s.size(); i++) {
-                        if (i != 0) {
-                            aux += s[i];
-                        }
-                        if (s[i] == ',') {
-                            tmp->push_back(stoi(aux));
-                            aux.clear();
-                        }
-                        if (i == s.size() - 1) {
-                            tmp->push_back(stoi(aux));
-                            aux.clear();
-                        }
+            getline(myfile, total);
+            for (int j = 0; j < stoi(total); j++) {
+                getline(myfile, s);
+                tmp->push_back(id);
+                for (int i = 0; i < s.size(); i++) {
+                    if (i != 0) {
+                        aux += s[i];
                     }
-                    /*gv->addEdge(id, tmp[0], tmp[1], EdgeType::DIRECTED);
-                    tmp.clear();*/
-                    id += 1;
+                    if (s[i] == ',') {
+                        tmp->push_back(stoi(aux));
+                        aux.clear();
+                    }
+                    if (i == s.size() - 1) {
+                        tmp->push_back(stoi(aux));
+                        aux.clear();
+                    }
                 }
-                break;
+                /*gv->addEdge(id, tmp[0], tmp[1], EdgeType::DIRECTED);
+                tmp.clear();*/
+                id += 1;
+            }
+            break;
         }
     }
     myfile.close();
@@ -178,9 +176,6 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
 
 }
 
-double euclideanDistance(pair<double, double> p1, pair<double, double> p2) {
-    return sqrt(pow(p1.first - p2.first, 2) + pow(p1.second - p2.second, 2));
-}
 
 void nodeParser(const string& node_path, Graph<Coordinates> *graph) {
     string s, aux, total;
@@ -270,3 +265,4 @@ Graph<Coordinates> mapParser(const string& node_path, const string& edge_path){
     return graph;
 
 }
+
