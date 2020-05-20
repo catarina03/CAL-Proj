@@ -92,6 +92,7 @@ void Application::showResults(){
 
     vector<Coordinates> path = graph.getPathTo(make_pair(333, 222)); //Works in 4x4 and 8x8 and 16x16
 
+
     showGraph(&graph, path);
 
     /*

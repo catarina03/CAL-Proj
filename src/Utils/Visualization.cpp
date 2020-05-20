@@ -171,6 +171,7 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
     }
 
     gv->rearrange();
+    cin.ignore(numeric_limits<streamsize>::max(),'\n');
     getchar();
     gv->closeWindow();
 
