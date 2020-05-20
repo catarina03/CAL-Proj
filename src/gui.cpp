@@ -132,11 +132,22 @@ void passengerMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
 
     int passengerID;
-    cin >> passengerID;
+    int passengerIDLength;
+
+    do{
+        cin >> passengerID;
+        passengerIDLength = to_string(passengerID).length();
+        if(passengerIDLength != 9) {
+            cout << "The NIF has to have 9 digits and you introduced " << passengerIDLength << endl;
+            cout << "Please enter your NIF again: " << endl;
+        }
+    }while(passengerIDLength != 9);
+    //crasha se passengerIDLength for maior que 10...
 
     Passenger newPassenger(passengerID, originPassenger, destinationPassenger, earliestDepartureTime, latestDepartureTime);
     Passenger *ptrToNewPassenger = &newPassenger;
     application.addPassenger(ptrToNewPassenger);
+    application.updatePassengerRecord(ptrToNewPassenger);
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -297,11 +308,21 @@ void driverMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
 
     int driverID;
-    cin >> driverID;
+    int driverIDLength;
+    do{
+        cin >> driverID;
+        driverIDLength = to_string(driverID).length();
+        if(driverIDLength != 9) {
+            cout << "The NIF has to have 9 digits and you introduced " << driverIDLength << endl;
+            cout << "Please enter your NIF again: " << endl;
+        }
+    }while(driverIDLength != 9);
+    //crasha se driverIDLength for maior que 10...
 
     Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTime, latestDepartureTime, maxDetourDistance, vehicleId, vehicleCapacity);
     Driver *ptrToNewDriver = &newDriver;
     application.addDriver(ptrToNewDriver);
+    application.updateDriverRecord(ptrToNewDriver);
 
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
