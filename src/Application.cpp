@@ -4,6 +4,7 @@
 
 #include "Application.h"
 #include <iostream>
+#include <vector>
 using namespace std;
 
 Application::Application(string name) {
@@ -27,9 +28,9 @@ void Application::removePassenger(Passenger *passenger) {
         cout << "You're trying to delete a passenger that is not registered on MeetUpRider!" << endl;
     }
     else{
-        for(Passenger* passenger_loop : passengers){
-            if(passenger_loop->getPassengerID()==passengerID)
-                passengers.remove(passenger_loop);
+        for(int i = 0; i < passengers.size(); i++){
+            if(passengers.at(i)->getPassengerID() == passengerID)
+                passengers.erase(passengers.begin()+i);
         }
     }
 }
@@ -59,9 +60,9 @@ void Application::removeDriver(Driver *driver) {
         cout << "You're trying to delete a driver that is not registered on MeetUpRider!" << endl;
     }
     else{
-        for(Driver* driver_loop : drivers){
-            if(driver_loop->getDriverID()==driverID)
-                drivers.remove(driver_loop);
+        for(int i = 0; i < drivers.size(); i++){
+            if(drivers.at(i)->getDriverID() == driverID)
+                drivers.erase(drivers.begin()+i);
         }
     }
 }
@@ -91,6 +92,7 @@ void Application::showResults(){
 
     vector<Coordinates> path = graph.getPathTo(make_pair(333, 222)); //Works in 4x4 and 8x8 and 16x16
 
+
     showGraph(&graph, path);
 
     /*
@@ -101,4 +103,74 @@ void Application::showResults(){
     vector<Coordinates> result = graph.AStarShortestPathByInfo(orig, dest);
     showGraph(&graph, result);
      */
+}
+
+
+void Application::updatePassengerRecord(Passenger *passenger){
+    vector<string> initialPassengers;
+    string line;
+    ifstream loadfile;
+    loadfile.open("../src/passengerRecord.txt");
+    if(loadfile.is_open()){
+        while(getline(loadfile, line)){
+            initialPassengers.push_back(line);
+        }
+    }
+    else{
+        cout << "Error on opening passenger log file 1" << endl;
+    }
+    loadfile.close();
+
+    ofstream updatedfile;
+    updatedfile.open("../src/passengerRecord.txt");
+    if(updatedfile.is_open()){
+        for(string passenger_loop : initialPassengers){
+            updatedfile << passenger_loop << endl;
+        }
+        updatedfile << to_string(passenger->getPassengerID()) << endl;
+        updatedfile << passenger->getOriginPassenger() << endl;
+        updatedfile << passenger->getDestinationPassenger() << endl;
+        updatedfile << to_string(passenger->getEarliestDepartureTime()) << endl;
+        updatedfile << to_string(passenger->getLatestDepartureTime()) << endl;
+    }
+    else{
+        cout << "Error on opening passenger log file 2" << endl;
+    }
+    updatedfile.close();
+}
+
+void Application::updateDriverRecord(Driver *driver){
+    vector<string> initialDrivers;
+    string line;
+    ifstream loadfile;
+    loadfile.open("../src/driverRecord.txt");
+    if(loadfile.is_open()){
+        while(getline(loadfile, line)){
+            initialDrivers.push_back(line);
+        }
+    }
+    else{
+        cout << "Error on opening passenger log file 1" << endl;
+    }
+    loadfile.close();
+
+    ofstream updatedfile;
+    updatedfile.open("../src/driverRecord.txt");
+    if(updatedfile.is_open()){
+        for(string driver_loop : initialDrivers){
+            updatedfile << driver_loop << endl;
+        }
+        updatedfile << to_string(driver->getDriverID()) << endl;
+        updatedfile << driver->getOriginDriver() << endl;
+        updatedfile << driver->getDestinationDriver() << endl;
+        updatedfile << to_string(driver->getEarliestDepartureTime()) << endl;
+        updatedfile << to_string(driver->getLatestDepartureTime()) << endl;
+        updatedfile << to_string(driver->getMaxDetourDistance()) << endl;
+        updatedfile << driver->getVehicleId() << endl;
+        updatedfile << to_string(driver->getVehicleCapacity()) << endl;
+    }
+    else{
+        cout << "Error on opening passenger log file 2" << endl;
+    }
+    updatedfile.close();
 }
