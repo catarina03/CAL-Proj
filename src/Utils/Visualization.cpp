@@ -161,6 +161,7 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
                 gv->addEdge(id, v->getID(), e.getDest()->getID(), EdgeType::DIRECTED);
                 if (find(res.begin(), res.end(), v->getInfo()) != res.end() && find(res.begin(), res.end(), e.getDest()->getInfo()) != res.end()){
                     gv->setEdgeColor(id, "red");
+                    gv->setEdgeThickness(id, 15);
                 }
                 id++;
             }

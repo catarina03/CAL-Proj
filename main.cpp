@@ -21,8 +21,10 @@ int main() {
     //TESTING
     cout << "MeetUpRider" << endl;
     Graph<Coordinates> graph = mapParser("../Maps/EspinhoMaps/espinho_strong_nodes_xy.txt", "../Maps/EspinhoMaps/espinho_strong_edges.txt");
-    vector<Coordinates> res;
-    res.clear();
+    //vector<Coordinates> res = graph.AStarShortestPathByID(3038, 4922);
+    graph.dijkstraShortestPathByID(3038);
+    vector<Coordinates> res = graph.getPathToByID(4922);
+    //res.clear();
     showGraph(&graph, res);
 
 
