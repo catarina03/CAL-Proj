@@ -27,7 +27,5 @@ int main() {
     //res.clear();
     showGraph(&graph, res);
 
-
-
     return 0;
 };
