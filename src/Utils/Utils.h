@@ -11,7 +11,7 @@
 #include <vector>
 #include <utility>
 
-typedef std::pair<double, double> Coordinates;
+typedef std::pair<int, int> Coordinates;
 
 double euclideanDistance(std::pair<double, double> p1, std::pair<double, double> p2);
 
