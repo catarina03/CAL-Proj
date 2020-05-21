@@ -139,6 +139,7 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
     if (res.empty()){
         for (auto v : vertexSet){
             gv->addNode(v->getID(), v->getInfo().first, v->getInfo().second);
+            gv->setVertexLabel(v->getID(), to_string(v->getID()));
         }
         for (auto v : vertexSet){
             for (auto e : v->getOutgoing()){
@@ -150,6 +151,7 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
     else{
         for (Vertex<Coordinates>* v : vertexSet){
             gv->addNode(v->getID(), v->getInfo().first, v->getInfo().second);
+            gv->setVertexLabel(v->getID(), to_string(v->getID()));
             if (find(res.begin(), res.end(), v->getInfo()) != res.end()){
                 gv->setVertexColor(v->getID(), "red");
             }
@@ -179,7 +181,7 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
 
 void nodeParser(const string& node_path, Graph<Coordinates> *graph) {
     string s, aux, total;
-    vector<double> tmp;
+    vector<int> tmp;
 
     //NODES - 3 PARAMETERS TO READ
     ifstream myfile;
