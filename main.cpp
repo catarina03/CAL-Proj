@@ -1,21 +1,31 @@
 #include <iostream>
 #include <csignal>
-#include "src/Utils.h"
+#include "Utils/Utils.h"
+#include "Utils/Visualization.h"
 #include "src/Graph/Graph.h"
+#include "src/gui.h"
+#include "Application.h"
+
+using namespace std;
 
 int main() {
     signal(SIGINT, SIG_IGN);  //NEEDED OR ELSE IT CRASHES UBUNTU
 
-    std::cout << "Welcome to MeetUpRider!" << std::endl;
+    //ACTUAL APP
+    /*
+    Application application("MeetUpRider");
+    startMenu(application);
+    cout << "Exited Successfully! :)" << endl;
+    */
 
-    Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
-    vector<Coordinates> path=graph.nearestNeighbour(make_pair(0,0),make_pair(185,592)); //só funciona para vértices na lateral esquerda ou em baixo porque as arestas têm todas o mesmo peso
-    //vector<Coordinates> path=graph.dfs(make_pair(0,0),make_pair(333,222)); //Works in 4x4 and 8x8 and 16x16
+    //TESTING
+    cout << "MeetUpRider" << endl;
+    Graph<Coordinates> graph = mapParser("../Maps/EspinhoMaps/espinho_strong_nodes_xy.txt", "../Maps/EspinhoMaps/espinho_strong_edges.txt");
+    //vector<Coordinates> res = graph.AStarShortestPathByID(3038, 4922);
+    graph.dijkstraShortestPathByID(3038);
+    vector<Coordinates> res = graph.getPathToByID(4922);
+    //res.clear();
+    showGraph(&graph, res);
 
-    //graph.dijkstraShortestPathByID(0);
-    //vector<Coordinates> path = graph.getPathTo(make_pair(300, 600)); //Works in 4x4 and 8x8
-    //vector<Coordinates> path = graph.getPathTo(make_pair(333, 222)); //Works in 4x4 and 8x8 and 16x16
-
-    showGraph(&graph, path);
     return 0;
 };
