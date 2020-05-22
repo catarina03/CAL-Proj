@@ -140,13 +140,18 @@ class Graph {
 
 
 public:
+    vector<T>duplicate_nodes;
 	Vertex<T> *findVertexByInfo(const T &in) const;
-	Vertex<T> *findVertexByID(const int id) const;
+	Vertex<T> *findVertexByID(int id) const;
 	bool addVertex(const int given_id, const T &in);
     bool addEdgeByID(const int sourc, const int dest, double w);
 	bool addEdge(const T &sourc, const T &dest, double w);
 	int getNumVertex() const;
 	vector<Vertex<T> *> getVertexSet() const;
+
+    vector<T> nearestNeighbour(const T &origin, const T &destiny);
+
+    int nearestNeighbourAux(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
 
 	//FP04
     vector<T> bfs (const T &origin, const T &dest);
@@ -159,8 +164,10 @@ public:
 	void dijkstraShortestPath(const T &s);
     void dijkstraShortestPathByID(const int s);
     vector<T> AStarShortestPathByInfo(const T &orig, const T &dest);
+    vector<T> AStarShortestPathByID(const int orig, const int dest);
     void bellmanFordShortestPath(const T &s);   //TODO...
-	vector<T> getPathTo(const T &dest) const;   //TODO...
+	vector<T> getPathTo(const T &dest) const;
+	vector<T> getPathToByID(const int dest) const;
 
 	// Fp05 - all pairs
 	void floydWarshallShortestPath();   //TODO...
@@ -193,7 +200,12 @@ Vertex<T> * Graph<T>::findVertexByInfo(const T &in) const {
 }
 
 template <class T>
-Vertex<T> * Graph<T>::findVertexByID(const int id) const {
+Vertex<T> * Graph<T>::findVertexByID(int id) const {
+    for (auto i:duplicate_nodes){
+        if (id==i.second){
+            id=i.first;
+        }
+    }
     for (auto v : vertexSet)
         if (v->id == id)
             return v;
@@ -382,6 +394,54 @@ vector<T> Graph<T>::AStarShortestPathByInfo(const T &origin, const T &destinatio
 }
 
 
+template <class T>
+vector<T> Graph<T>::AStarShortestPathByID(const int origin, const int destination) {
+    MutablePriorityQueue<Vertex<T> > q;
+    for (Vertex<T> * vertex : vertexSet) {
+        vertex->dist = INT_MAX;
+        vertex->path = NULL;
+        //q.insert(vertex);
+    }
+    Vertex<T>* orig = findVertexByID(origin);
+    Vertex<T>* dest = findVertexByID(destination);
+    orig->dist = euclideanDistance(orig->getInfo(), dest->info);
+    q.insert(orig);
+    Vertex<T>* v;
+
+    while(!q.empty()){
+        v = q.extractMin();
+        if (v == dest){
+            break;
+        }
+        for (Edge<T> e : v->getOutgoing()){
+            double f = v->dist - euclideanDistance(v->info, dest->info) + e.weight + euclideanDistance(e.dest->info, dest->info);
+            if (e.dest->dist > f){
+                double d = e.dest->dist;
+                e.dest->dist = f;
+                e.dest->path = v;
+                if (d == INT_MAX){
+                    q.insert(e.dest);
+                }
+                else{
+                    q.decreaseKey(e.dest);
+                }
+            }
+        }
+    }
+
+
+    vector<T> res;
+    res.push_back(dest->info);
+    v = dest;
+    while (v->path != NULL){
+        res.push_back(v->path->info);
+        v = v->path;
+    }
+    reverse(res.begin(), res.end());
+    return res;
+}
+
+
 template<class T>
 void Graph<T>::bellmanFordShortestPath(const T &orig) {
 
@@ -426,6 +486,23 @@ vector<T> Graph<T>::getPathTo(const T &dest) const{  //DONE
 	reverse(res.begin(), res.end());
 
 	return res;
+}
+
+template<class T>
+vector<T> Graph<T>::getPathToByID(const int dest) const{  //DONE
+    vector<T> res;
+
+    Vertex<T> * destination = findVertexByID(dest);
+    res.push_back(destination->info);
+
+    while (destination->getPath() != NULL){
+        res.push_back(destination->getPath()->getInfo());
+        destination = destination->getPath();
+    }
+
+    reverse(res.begin(), res.end());
+
+    return res;
 }
 
 
@@ -625,5 +702,36 @@ vector<T> Graph<T>::bfs(const T &origin, const T &dest) {
     return res;
 }
 
+vector<T> Graph<T>::nearestNeighbour(const T &origin, const T &destiny){
+    auto orig=findVertexByInfo(origin);
+    auto dest=findVertexByInfo(destiny);
+    vector<T>path;
+
+    for (auto w:this->vertexSet){
+        w->visited=false;
+    }
+    nearestNeighbourAux(orig, dest, &path);
+    return path;
+}
+
+template<class T>
+int Graph<T>::nearestNeighbourAux(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res){
+    while(origin->info!=dest->info){
+        origin->visited=true;
+        res->push_back(origin->info);
+        auto shortest_path=origin->outgoing[0];
+        for (auto w:origin->outgoing){
+            if (w.weight<shortest_path.weight){
+                if(!(w.dest->visited)) {
+                    shortest_path = w;
+                }
+            }
+        }
+        origin=shortest_path.dest;
+        if (origin->visited){
+            return -1;
+        }
+    }
+}
 
 #endif /* GRAPH_H_ */
