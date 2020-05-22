@@ -193,7 +193,9 @@ void nodeParser(const string& node_path, Graph<Coordinates> *graph) {
             getline(myfile, total);
             for (int j = 0; j < stoi(total); j++) {
                 getline(myfile, s);
-                for (int i = 0; i < s.size(); i++) {
+                for (unsigned long i = 0; i < s.size(); i++) {
+                    //if (s[i]=='.')
+                      //  continue;
 
                     if (s[i] == ',') {
                         tmp.push_back(stoi(aux));
@@ -209,6 +211,12 @@ void nodeParser(const string& node_path, Graph<Coordinates> *graph) {
                                 aux += s[i];
                             }
                         }
+                    }
+                }
+                for(auto i:graph->getVertexSet()){
+                    if (i->getInfo()==make_pair(tmp.at(1), tmp.at(2))){
+                        graph->duplicate_nodes.push_back(make_pair(i->getID(),tmp.at(0)));
+                        break;
                     }
                 }
                 graph->addVertex(tmp.at(0), make_pair(tmp.at(1), tmp.at(2)));
@@ -251,7 +259,19 @@ void edgeParser(const string& edge_path, Graph<Coordinates> *graph){
                         }
                     }
                 }
+
+                for (auto i:graph->duplicate_nodes){
+                    if (tmp.at(0)==i.second){
+                        tmp[0]=i.first;
+                    }
+                    if (tmp.at(1)==i.second){
+                        tmp[1]=i.first;
+                    }
+                }
+
                 double result = euclideanDistance(graph->findVertexByID(tmp.at(0))->getInfo(), graph->findVertexByID(tmp.at(1))->getInfo());
+
+
                 graph->addEdgeByID(tmp.at(0), tmp.at(1), result);
                 tmp.clear();
             }

@@ -140,8 +140,9 @@ class Graph {
 
 
 public:
+    vector<T>duplicate_nodes;
 	Vertex<T> *findVertexByInfo(const T &in) const;
-	Vertex<T> *findVertexByID(const int id) const;
+	Vertex<T> *findVertexByID(int id) const;
 	bool addVertex(const int given_id, const T &in);
     bool addEdgeByID(const int sourc, const int dest, double w);
 	bool addEdge(const T &sourc, const T &dest, double w);
@@ -198,7 +199,12 @@ Vertex<T> * Graph<T>::findVertexByInfo(const T &in) const {
 }
 
 template <class T>
-Vertex<T> * Graph<T>::findVertexByID(const int id) const {
+Vertex<T> * Graph<T>::findVertexByID(int id) const {
+    for (auto i:duplicate_nodes){
+        if (id==i.second){
+            id=i.first;
+        }
+    }
     for (auto v : vertexSet)
         if (v->id == id)
             return v;
