@@ -149,6 +149,7 @@ public:
 	vector<Vertex<T> *> getVertexSet() const;
 
 	//FP04
+    vector<T> bfs (const T &origin, const T &dest);
 
     vector<T> dfs (const T &origin, const T &dest);
     int dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
@@ -593,6 +594,35 @@ int Graph<T>::dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res){
         res->erase(res->end());
         return -1;
     }
+}
+
+template<class T>
+vector<T> Graph<T>::bfs(const T &origin, const T &dest) {
+    vector<T> res;
+    auto s = findVertexByInfo(origin);
+    if (s == NULL)
+        return res;
+    queue<Vertex<T> *> q;
+    for (auto v : vertexSet)
+        v->visited = false;
+    q.push(s);
+    s->visited = true;
+    while (!q.empty()) {
+        auto v = q.front();
+        q.pop();
+        res.push_back(v->info);
+        for (auto & e : v->adj) {
+            auto w = e.dest;
+            if ( ! w->visited ) {
+                q.push(w);
+                w->visited = true;
+            }
+            if (w->info==dest){
+                return res;
+            }
+        }
+    }
+    return res;
 }
 
 

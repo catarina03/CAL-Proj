@@ -83,8 +83,8 @@ int Application::findRide() {
 }
 
 void Application::showResults(){
+    //Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
     Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
-
     //Dijkstra
 
     graph.dijkstraShortestPathByID(0);
