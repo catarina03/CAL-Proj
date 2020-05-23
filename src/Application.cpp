@@ -85,6 +85,11 @@ int Application::findRide() {
 void Application::showResults(){
     Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
 
+    //floyd warshall
+    /*
+    graph.floydWarshallShortestPath();
+    vector<Coordinates> path=graph.getfloydWarshallPath(make_pair(0,0),make_pair(333,222));
+    */
     //Dijkstra
 
     graph.dijkstraShortestPathByID(0);
@@ -103,6 +108,7 @@ void Application::showResults(){
     vector<Coordinates> result = graph.AStarShortestPathByInfo(orig, dest);
     showGraph(&graph, result);
      */
+
 }
 
 
