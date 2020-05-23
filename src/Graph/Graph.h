@@ -144,10 +144,8 @@ public:
 	Vertex<T> *findVertexByInfo(const T &in) const;
 	Vertex<T> *findVertexByID(int id) const;
 	bool addVertex(const int given_id, const T &in);
-	bool removeVertex(const Vertex<T> *vertex);
     bool addEdgeByID(const int sourc, const int dest, double w);
 	bool addEdge(const T &sourc, const T &dest, double w);
-	bool removeEdge(const Vertex<T> *orig, const Vertex<T> *dest);
 	int getNumVertex() const;
 	vector<Vertex<T> *> getVertexSet() const;
 
@@ -161,7 +159,6 @@ public:
     void genericDFSByID(Vertex<T>* vertex, vector<int> &ids);
     vector<T> dfs(const T &origin, const T &dest);
     int dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
-    void filterGraph(vector<int> nodes);
 
     // Fp05 - single source
 	void unweightedShortestPath(const T &s);    //TODO...
@@ -225,16 +222,6 @@ bool Graph<T>::addVertex(const int given_id, const T &in) {
 	return true;
 }
 
-template<class T>
-bool Graph<T>::removeVertex(const Vertex<T> *vertex){
-    if (find(vertexSet.begin(), vertexSet.end(), vertex) == vertexSet.end())
-        return false; //Not in the graph
-    else{
-        vertexSet.erase(find(vertexSet.begin(), vertexSet.end(), vertex));
-        return true;
-    }
-}
-
 /*
  * Adds an edge to a graph (this), given the contents of the source and
  * destination vertices and the edge weight (w).
@@ -260,18 +247,6 @@ bool Graph<T>::addEdgeByID(const int sourc, const int dest, double w) {
     return true;
 }
 
-template<class T>
-bool Graph<T>::removeEdge(const Vertex<T> *orig, const Vertex<T> *dest){
-    if(find(vertexSet.begin(), vertexSet.end(), orig) == vertexSet.end() || find(vertexSet.begin(), vertexSet.end(), dest) == vertexSet.end())
-        return false;
-    for (Edge<T> e : orig->outgoing){
-        if (e.dest == dest){
-            vector<Edge<T>> edgeVector = orig->outgoing;
-            edgeVector.erase(find(orig->outgoing.begin(), orig->outgoing.end(), e));
-        }
-    }
-    return true;
-}
 
 template <class T>
 void deleteMatrix(T **m, int n) {
@@ -628,6 +603,12 @@ void Graph<T>::genericDFSByID(Vertex<T>* vertex, vector<int> &ids){
             }
         }
     }
+    for(auto i=vertexSet.begin();i!=vertexSet.end();i++){
+        if (!((*i)->visited)){
+            vertexSet.erase(i);
+            i--;
+        }
+    }
 }
 
 
@@ -666,18 +647,6 @@ int Graph<T>::dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res){
     if (count==0){
         res->erase(res->end());
         return -1;
-    }
-}
-
-template <class T>
-void Graph<T>::filterGraph(vector<int> nodes){
-    for (Vertex<T>* v : vertexSet){
-        if (find(nodes.begin(), nodes.end(), v) == nodes.end()){
-            for (Edge<T> e : v->outgoing){
-                removeEdge(v, e.dest);
-            }
-            removeVertex(v);
-        }
     }
 }
 
