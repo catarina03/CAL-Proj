@@ -708,11 +708,11 @@ vector<T> Graph<T>::bfs(const int &origin) {
 
 template<class T>
 void Graph<T>::BfsConectedGraph(const int &origin) {
-    Graph<Coordinates>res;
+    //Graph<Coordinates>res;
 
     auto s = findVertexByID(origin);
     if (s == NULL)
-        return res;
+        return;
     queue<Vertex<T> *> q;
     for (auto v : vertexSet)
         v->visited = false;
@@ -738,7 +738,7 @@ void Graph<T>::BfsConectedGraph(const int &origin) {
             i--;
         }
     }
-    return res;
+    return;
 }
 
 
