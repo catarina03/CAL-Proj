@@ -334,6 +334,5 @@ Graph<Coordinates> mapParser(const string& node_path, const string& edge_path){
     nodeParser(node_path, &graph);
     edgeParser(edge_path, &graph);
     return graph;
-
 }
 

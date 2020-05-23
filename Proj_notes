@@ -1,0 +1,6 @@
+[COMPONENTE FORTEMENTE CONEXA] - Isto podia ser uma opção no menu após escolher a região
+- Ver só a componente fortemente conexa
+- Ver a componente fortemente conexa a cor diferente no grafo
+[Cancela a componente fortemente conexa para todo o gráfico, falar disso como maneira de otimizar com tarjan etc mas não foi implementada, apenas implementamos a CFC a partir de uma origem]
+
+

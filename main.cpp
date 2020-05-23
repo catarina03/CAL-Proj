@@ -25,13 +25,16 @@ int main() {
     //vector<Coordinates> res = graph.AStarShortestPathByID(3038, 4922);
     cout<<"returned to main"<<endl;
     vector<int> res = graph.stronglyConnectedDFS(1);
+    Graph<Coordinates> new_graph = graph;
+    new_graph.filterGraph(res);
 
     //graph.dijkstraShortestPathByID(8923); //27744 - Porto, 7100 - Penafiel, 8923 - Espinho
     //cout<<"djisktra"<<endl;
-    //vector<Coordinates> res = graph.getPathToByID(4777); //26781 - Porto, 426 - Penafiel, 4777 - ESpinho
-    //cout<<"res"<<endl;
-    //res.clear();
-    showGraphbyID(&graph, res);
+    //vector<Coordinates> res = graph.getPathToByID(4777); //26781 - Porto, 426 - Penafiel, 4777 - Espinho
+    cout<<"res"<<endl;
+    res.clear();
+    showGraphbyID(&new_graph, res);
+    cout << "Exited sucessfully" << endl;
 
     return 0;
 };
