@@ -20,12 +20,18 @@ int main() {
 
     //TESTING
     cout << "MeetUpRider" << endl;
-    Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_strong_nodes_xy.txt", "../Maps/PortoMaps/porto_strong_edges.txt");
+    //Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_strong_nodes_xy.txt", "../Maps/PortoMaps/porto_strong_edges.txt");
+    Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_full_nodes_xy.txt", "../Maps/PortoMaps/porto_full_edges.txt");
     //vector<Coordinates> res = graph.AStarShortestPathByID(3038, 4922);
     cout<<"returned to main"<<endl;
-    graph.dijkstraShortestPathByID(27744);
+
+    graph.BfsConectedGraph(27744);
+
+    vector<Coordinates>res= graph.bfs(27744);
+    //graph.dijkstraShortestPathByID(27744);
     cout<<"djisktra"<<endl;
-    vector<Coordinates> res = graph.getPathToByID(26781);
+    //vector<Coordinates> res = graph.getPathToByID(26781);
+    //vector<Coordinates> res;
     cout<<"res"<<endl;
     //res.clear();
     showGraph(&graph, res);
