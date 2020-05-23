@@ -20,15 +20,18 @@ int main() {
 
     //TESTING
     cout << "MeetUpRider" << endl;
-    Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_strong_nodes_xy.txt", "../Maps/PortoMaps/porto_strong_edges.txt");
+    cout << "Loading..." << endl;
+    Graph<Coordinates> graph = mapParser("../Maps/PenafielMaps/penafiel_full_nodes_xy.txt", "../Maps/PenafielMaps/penafiel_full_edges.txt");
     //vector<Coordinates> res = graph.AStarShortestPathByID(3038, 4922);
     cout<<"returned to main"<<endl;
-    graph.dijkstraShortestPathByID(27744);
-    cout<<"djisktra"<<endl;
-    vector<Coordinates> res = graph.getPathToByID(26781);
-    cout<<"res"<<endl;
+    vector<int> res = graph.stronglyConnectedDFS(1);
+
+    //graph.dijkstraShortestPathByID(8923); //27744 - Porto, 7100 - Penafiel, 8923 - Espinho
+    //cout<<"djisktra"<<endl;
+    //vector<Coordinates> res = graph.getPathToByID(4777); //26781 - Porto, 426 - Penafiel, 4777 - ESpinho
+    //cout<<"res"<<endl;
     //res.clear();
-    showGraph(&graph, res);
+    showGraphbyID(&graph, res);
 
     return 0;
 };

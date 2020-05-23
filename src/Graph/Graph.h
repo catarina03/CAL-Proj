@@ -139,9 +139,6 @@ class Graph {
     double ** v_distance = nullptr;//floyd-warshall
     int **path = nullptr;
 
-
-
-
 public:
     vector<T>duplicate_nodes;
 	Vertex<T> *findVertexByInfo(const T &in) const;
@@ -158,7 +155,9 @@ public:
 
 	//FP04
 
-    vector<T> dfs (const T &origin, const T &dest);
+	vector<int> stronglyConnectedDFS(const int orig);
+    void genericDFSByID(Vertex<T>* vertex, vector<int> &ids);
+    vector<T> dfs(const T &origin, const T &dest);
     int dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
 
     // Fp05 - single source
@@ -568,6 +567,44 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
         res.push_back(vertexSet[j]->info);
     reverse(res.begin(), res.end());
     return res;
+}
+
+/*
+ * Cálculo da CFC a partir de um ponto (ponto de origem do condutor for example)
+ */
+template <class T>
+vector<int> Graph<T>::stronglyConnectedDFS(const int orig){
+    vector<int> res;
+    for (auto v : vertexSet) {
+        v->visited = false;
+    }
+    Vertex<T>* o = findVertexByID(orig);
+    genericDFSByID(o, res);
+    return res;
+}
+
+template <class T>
+void Graph<T>::genericDFSByID(Vertex<T>* vertex, vector<int> &ids){
+    vertex->visited = true;
+    stack<Vertex<T>*> s;
+    s.push(vertex);
+    if(find(ids.begin(), ids.end(), vertex->id) == ids.end()){
+        ids.push_back(vertex->getID());
+    }
+    while(!s.empty()){
+        Vertex<T>* v = s.top();
+        s.pop();
+        for (auto e : v->outgoing){
+            Vertex<T>* dest = e.dest;
+            if (!dest->visited){
+                s.push(dest);
+                if(find(ids.begin(), ids.end(), dest->id) == ids.end()){
+                    ids.push_back(dest->id);
+                }
+                dest->visited = true;
+            }
+        }
+    }
 }
 
 
