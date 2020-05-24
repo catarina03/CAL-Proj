@@ -704,5 +704,46 @@ int Graph<T>::nearestNeighbourAux(Vertex<T> *origin, Vertex<T> *dest, vector<T> 
         }
     }
 }
+/*
+template<class T>
+vector<int> Graph<T>::twoOptSwap(const vector<int> &ord, const int &i, const int &k) {
+    vector<int> new_ord;
+
+    for (int c = 0; c < i; c++) {
+        new_ord.push_back(ord.at(c));
+    }
+
+    for (int c = k; c >= i; c--) {
+        new_ord.push_back(ord.at(c));
+    }
+
+    for (int c = k + 1; c < ord.size(); c++) {
+        new_ord.push_back(ord.at(c));
+    }
+
+    return new_ord;
+}
+
+template<class T>
+vector<T> Graph<T>::twoOptHeuristic(vector<int> &ord, vector<T> &path) {
+    int improve = 0;
+    vector<T> optimalPath = path;
+
+    while (improve < 20) {
+        for (int i = 1; i < ord.size() - 2; i++) {
+            for (int k = i + 1; k < ord.size() - 1; k++) {
+                vector<T> newPath = buildPath(twoOptSwap(ord, i, k));
+                if (newPath.getLength() < optimalPath.getLength()) {
+                    improve = 0;
+                    optimalPath = newPath;
+                }
+            }
+        }
+        improve++;
+    }
+
+    return optimalPath;
+}
+*/
 
 #endif /* GRAPH_H_ */

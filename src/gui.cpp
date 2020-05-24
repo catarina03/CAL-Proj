@@ -54,6 +54,9 @@ void startMenu(Application &application) {
 }
 
 void passengerMenu(Application &application) {
+
+    string location = chooseLocation(application);
+
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
@@ -67,7 +70,7 @@ void passengerMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
 
-    string originPassenger;
+    int originPassenger;
     cin >> originPassenger;
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -83,7 +86,7 @@ void passengerMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
 
-    string destinationPassenger;
+    int destinationPassenger;
     cin >> destinationPassenger;
 
 
@@ -148,7 +151,7 @@ void passengerMenu(Application &application) {
     Passenger newPassenger(passengerID, originPassenger, destinationPassenger, earliestDepartureTime, latestDepartureTime);
     Passenger *ptrToNewPassenger = &newPassenger;
     application.addPassenger(ptrToNewPassenger);
-    application.updatePassengerRecord(ptrToNewPassenger);
+    application.updatePassengerRecord(ptrToNewPassenger, location);
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -170,7 +173,8 @@ void passengerMenu(Application &application) {
      if(choice == 1){
 
          if(!application.findRide()){    //se o processamento dos dados retornar sucesso
-             application.showResults();
+             application.showResults(location, originPassenger, destinationPassenger);
+             startMenu(application);
          }
          else{
              exit(2);  //processamento dos dados falhou
@@ -183,6 +187,10 @@ void passengerMenu(Application &application) {
 }
 
 void driverMenu(Application &application) {
+
+    string location = chooseLocation(application);
+
+
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
@@ -196,7 +204,7 @@ void driverMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
 
-    string originDriver;
+    int originDriver;
     cin >> originDriver;
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -212,7 +220,7 @@ void driverMenu(Application &application) {
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
 
-    string destinationDriver;
+    int destinationDriver;
     cin >> destinationDriver;
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -269,22 +277,6 @@ void driverMenu(Application &application) {
     cout << "||||||||||                 MeetUpRider                ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
-    cout << "||||||||||   Please enter your license plate number   ||||||||||" << endl;
-    cout << "||||||||||                                            ||||||||||" << endl;
-    cout << "||||||||||                                            ||||||||||" << endl;
-    cout << "||||||||||                                            ||||||||||" << endl;
-    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
-    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
-
-    string vehicleId;
-    cin >> vehicleId;
-
-    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
-    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
-    cout << "||||||||||                                            ||||||||||" << endl;
-    cout << "||||||||||                 MeetUpRider                ||||||||||" << endl;
-    cout << "||||||||||                                            ||||||||||" << endl;
-    cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||    Please enter your vehicle's capacity    ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
@@ -320,10 +312,10 @@ void driverMenu(Application &application) {
     }while(driverIDLength != 9);
     //crasha se driverIDLength for maior que 10...
 
-    Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTime, latestDepartureTime, maxDetourDistance, vehicleId, vehicleCapacity);
+    Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTime, latestDepartureTime, maxDetourDistance, vehicleCapacity);
     Driver *ptrToNewDriver = &newDriver;
     application.addDriver(ptrToNewDriver);
-    application.updateDriverRecord(ptrToNewDriver);
+    application.updateDriverRecord(ptrToNewDriver, location);
 
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -345,7 +337,8 @@ void driverMenu(Application &application) {
     if(choice == 1){
 
         if(!application.findRide()){    //se o processamento dos dados retornar sucesso
-            application.showResults();
+            application.showResults(location, originDriver, destinationDriver);
+            startMenu(application);
         }
         else{
             exit(2);  //processamento dos dados falhou
@@ -389,4 +382,43 @@ void helpMenu(Application &application) {
         cout << "Please enter '0' to go back :)" << endl;
         helpMenu(application);
     }
+}
+
+string chooseLocation(Application &application){
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||                 MeetUpRider                ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||             Choose your location           ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||             1) Porto                       ||||||||||" << endl;
+    cout << "||||||||||             2) Penafiel                    ||||||||||" << endl;
+    cout << "||||||||||             3) Espinho                     ||||||||||" << endl;
+    cout << "||||||||||                                            ||||||||||" << endl;
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+    cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
+
+    int option;
+    cin >> option;
+
+    switch(option){
+        case 1:
+            application.loadPassengerDriverRecord("Porto");
+            application.showPortoMap();
+            return "Porto";
+        case 2:
+            application.loadPassengerDriverRecord("Penafiel");
+            application.showPenafielMap();
+            return "Penafiel";
+        case 3:
+            application.loadPassengerDriverRecord("Espinho");
+            application.showEspinhoMap();
+            return "Espinho";
+        default:
+            break;
+    }
+
+    return "errorLocation";
+
 }
