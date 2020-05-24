@@ -155,8 +155,8 @@ public:
 
 	//FP04
 
-	vector<int> stronglyConnectedDFS(const int orig);
-    void genericDFSByID(Vertex<T>* vertex, vector<int> &ids);
+    void DFSConnectedGraph(Vertex<T>* vertex, vector<int> &ids);
+    vector<int> dfsVector(const int orig);
     vector<T> dfs(const T &origin, const T &dest);
     int dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
 
@@ -568,27 +568,20 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
 }
 
 /*
- * Cálculo da CFC a partir de um ponto (ponto de origem do condutor for example)
+ * Muda o grafo
  */
 template <class T>
-vector<int> Graph<T>::stronglyConnectedDFS(const int orig){
-    vector<int> res;
+void Graph<T>::DFSConnectedGraph(Vertex<T>* origin, vector<int> &ids){
+    Vertex<T>* vertex = findVertexByID(origin);
+    if (vertex == NULL)
+        return;
     for (auto v : vertexSet) {
         v->visited = false;
     }
-    Vertex<T>* o = findVertexByID(orig);
-    genericDFSByID(o, res);
-    return res;
-}
-
-template <class T>
-void Graph<T>::genericDFSByID(Vertex<T>* vertex, vector<int> &ids){
     vertex->visited = true;
     stack<Vertex<T>*> s;
     s.push(vertex);
-    if(find(ids.begin(), ids.end(), vertex->id) == ids.end()){
-        ids.push_back(vertex->getID());
-    }
+
     while(!s.empty()){
         Vertex<T>* v = s.top();
         s.pop();
@@ -596,9 +589,6 @@ void Graph<T>::genericDFSByID(Vertex<T>* vertex, vector<int> &ids){
             Vertex<T>* dest = e.dest;
             if (!dest->visited){
                 s.push(dest);
-                if(find(ids.begin(), ids.end(), dest->id) == ids.end()){
-                    ids.push_back(dest->id);
-                }
                 dest->visited = true;
             }
         }
@@ -609,6 +599,39 @@ void Graph<T>::genericDFSByID(Vertex<T>* vertex, vector<int> &ids){
             i--;
         }
     }
+}
+
+
+/*
+ * Returns the vector with the SCC vertex ids
+ */
+template <class T>
+vector<int> Graph<T>::dfsVector(const int orig){
+    vector<int> ids;
+    Vertex<T>* vertex = findVertexByID(orig);
+    if (vertex == NULL){
+        return ids;
+    }
+    for (auto v : vertexSet) {
+        v->visited = false;
+    }
+    vertex->visited = true;
+    stack<Vertex<T>*> s;
+    s.push(vertex);
+
+    while(!s.empty()){
+        Vertex<T>* v = s.top();
+        s.pop();
+        ids.push_back(v->id);
+        for (auto e : v->outgoing){
+            Vertex<T>* dest = e.dest;
+            if (!dest->visited){
+                s.push(dest);
+                dest->visited = true;
+            }
+        }
+    }
+    return ids;
 }
 
 
