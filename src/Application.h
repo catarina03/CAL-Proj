@@ -31,10 +31,17 @@ public:
     bool driverExists(int driverID);
 
     int findRide();
-    void showResults();
+    int showResults(string location, int origin, int destination);
 
-    void updatePassengerRecord(Passenger *passenger);
-    void updateDriverRecord(Driver *driver);
+    void updatePassengerRecord(Passenger *passenger, string location);
+    void updateDriverRecord(Driver *driver, string location);
+
+    void loadPassengerDriverRecord(string location);
+
+    void showPortoMap();
+    void showPenafielMap();
+    void showEspinhoMap();
+
 };
 
 

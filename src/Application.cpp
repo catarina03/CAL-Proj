@@ -82,24 +82,41 @@ int Application::findRide() {
     return 0;
 }
 
-void Application::showResults(){
-    Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
+int Application::showResults(string location, int origin, int destination){
+
+    if(location == "Porto"){
+        Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_strong_nodes_xy.txt", "../Maps/PortoMaps/porto_strong_edges.txt");
+        vector<Coordinates> res = graph.AStarShortestPathByID(origin, destination);
+        showGraph(&graph, res);
+    }
+    else if(location == "Penafiel"){
+        Graph<Coordinates> graph = mapParser("../Maps/PenafielMaps/penafiel_strong_nodes_xy.txt", "../Maps/PenafielMaps/penafiel_strong_edges.txt");
+        vector<Coordinates> res = graph.AStarShortestPathByID(origin, destination);
+        showGraph(&graph, res);
+    }
+    else if (location == "Espinho"){
+        Graph<Coordinates> graph = mapParser("../Maps/EspinhoMaps/espinho_strong_nodes_xy.txt", "../Maps/EspinhoMaps/espinho_strong_edges.txt");
+        vector<Coordinates> res = graph.AStarShortestPathByID(origin, destination);
+        showGraph(&graph, res);
+    }
+    
+    //Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
 
     //floyd warshall
-    /*
-    graph.floydWarshallShortestPath();
-    vector<Coordinates> path=graph.getfloydWarshallPath(make_pair(0,0),make_pair(333,222));
-    */
+    
+    //graph.floydWarshallShortestPath();
+    //vector<Coordinates> path=graph.getfloydWarshallPath(make_pair(0,0),make_pair(333,222));
+    
     //Dijkstra
 
-    graph.dijkstraShortestPathByID(0);
+    //graph.dijkstraShortestPathByID(0);
     //vector<Coordinates> path = graph.getPathTo(make_pair(300, 600)); //Works in 4x4 and 8x8
 
-    vector<Coordinates> path = graph.getPathTo(make_pair(333, 222)); //Works in 4x4 and 8x8 and 16x16
+    //vector<Coordinates> path = graph.getPathTo(make_pair(333, 222)); //Works in 4x4 and 8x8 and 16x16
 
 
-    showGraph(&graph, path);
-
+    //showGraph(&graph, path);
+    
     /*
     //A*
     //16x16
@@ -109,74 +126,182 @@ void Application::showResults(){
     showGraph(&graph, result);
      */
 
+    return 0;
 }
 
 
-void Application::updatePassengerRecord(Passenger *passenger){
+void Application::updatePassengerRecord(Passenger *passenger, string location){
     vector<string> initialPassengers;
     string line;
     ifstream loadfile;
-    loadfile.open("../src/passengerRecord.txt");
+    string filenamePassenger = "../src/passengerRecord"+location+".txt";
+    loadfile.open(filenamePassenger);
     if(loadfile.is_open()){
         while(getline(loadfile, line)){
             initialPassengers.push_back(line);
         }
     }
     else{
-        cout << "Error on opening passenger log file 1" << endl;
+        cout << "Error on updating passenger record file" << endl;
     }
     loadfile.close();
 
     ofstream updatedfile;
-    updatedfile.open("../src/passengerRecord.txt");
+    updatedfile.open(filenamePassenger);
     if(updatedfile.is_open()){
         for(string passenger_loop : initialPassengers){
             updatedfile << passenger_loop << endl;
         }
         updatedfile << to_string(passenger->getPassengerID()) << endl;
-        updatedfile << passenger->getOriginPassenger() << endl;
-        updatedfile << passenger->getDestinationPassenger() << endl;
+        updatedfile << to_string(passenger->getOriginPassenger()) << endl;
+        updatedfile << to_string(passenger->getDestinationPassenger()) << endl;
         updatedfile << to_string(passenger->getEarliestDepartureTime()) << endl;
         updatedfile << to_string(passenger->getLatestDepartureTime()) << endl;
     }
     else{
-        cout << "Error on opening passenger log file 2" << endl;
+        cout << "Error on updating passenger record file" << endl;
     }
     updatedfile.close();
 }
 
-void Application::updateDriverRecord(Driver *driver){
+void Application::updateDriverRecord(Driver *driver, string location){
     vector<string> initialDrivers;
     string line;
     ifstream loadfile;
-    loadfile.open("../src/driverRecord.txt");
+    string filenameDriver = "../src/driverRecord" + location + ".txt";
+    cout << filenameDriver << endl;
+    loadfile.open(filenameDriver);
     if(loadfile.is_open()){
         while(getline(loadfile, line)){
             initialDrivers.push_back(line);
         }
     }
     else{
-        cout << "Error on opening passenger log file 1" << endl;
+        cout << "Error on updating driver record file" << endl;
     }
     loadfile.close();
 
     ofstream updatedfile;
-    updatedfile.open("../src/driverRecord.txt");
+    updatedfile.open(filenameDriver);
     if(updatedfile.is_open()){
         for(string driver_loop : initialDrivers){
             updatedfile << driver_loop << endl;
         }
         updatedfile << to_string(driver->getDriverID()) << endl;
-        updatedfile << driver->getOriginDriver() << endl;
-        updatedfile << driver->getDestinationDriver() << endl;
+        updatedfile << to_string(driver->getOriginDriver()) << endl;
+        updatedfile << to_string(driver->getDestinationDriver()) << endl;
         updatedfile << to_string(driver->getEarliestDepartureTime()) << endl;
         updatedfile << to_string(driver->getLatestDepartureTime()) << endl;
         updatedfile << to_string(driver->getMaxDetourDistance()) << endl;
-        updatedfile << driver->getVehicleId() << endl;
         updatedfile << to_string(driver->getVehicleCapacity()) << endl;
     }
     else{
-        cout << "Error on opening passenger log file 2" << endl;
+        cout << "Error on updating driver record file" << endl;
     }
     updatedfile.close();
+}
+
+void Application::loadPassengerDriverRecord(string location){
+    // LOAD PASSENGERS
+    int passengerID = 0;
+    int originPassenger = 0;
+    int destinationPassenger = 0;
+    int earliestDepartureTime = 0;
+    int latestDepartureTime = 0;
+    int counter = 4;
+
+    string line;
+    ifstream loadfile;
+    string filenamePassenger = "../src/passengerRecord"+location+".txt";
+
+    loadfile.open(filenamePassenger);
+    if(loadfile.is_open()){
+        while(getline(loadfile, line)){
+            counter++;
+            if(counter % 5 == 0){
+                passengerID = stoi(line);
+            }
+            else if(counter % 5 == 1){
+                originPassenger = stoi(line);
+            }
+            else if(counter % 5 == 2){
+                destinationPassenger = stoi(line);
+            }
+            else if(counter % 5 == 3){
+                earliestDepartureTime = stoi(line);
+            }
+            else if(counter % 5 == 4){
+                latestDepartureTime = stoi(line);
+                Passenger newPassenger(passengerID, originPassenger, destinationPassenger, earliestDepartureTime, latestDepartureTime);
+                Passenger *ptrToNewPassenger = &newPassenger;
+                passengers.push_back(ptrToNewPassenger);
+            }
+
+        }
+    }
+    else{
+        cout << "Error on opening passenger log file" << endl;
+    }
+    loadfile.close();
+
+
+
+    // LOAD DRIVERS
+    int driverID = 0;
+    int originDriver = 0;
+    int destinationDriver = 0;
+    int earliestDepartureTimeDriver = 0;
+    int latestDepartureTimeDriver = 0;
+    int maxDetourDistance = 0;
+    int vehicleCapacity = 0;
+
+    counter = 6;
+    ifstream loadfileDriver;
+    string filenameDriver = "../src/driverRecord"+location+".txt";
+    loadfileDriver.open(filenameDriver);
+    if(loadfileDriver.is_open()){
+        while(getline(loadfile, line)) {
+            counter++;
+            if (counter % 7 == 0) {
+                driverID = stoi(line);
+            } else if (counter % 7 == 1) {
+                originDriver = stoi(line);
+            } else if (counter % 7 == 2) {
+                destinationDriver = stoi(line);
+            } else if (counter % 7 == 3) {
+                earliestDepartureTimeDriver = stoi(line);
+            } else if (counter % 7 == 4) {
+                latestDepartureTimeDriver = stoi(line);
+            } else if (counter % 7 == 5) {
+                maxDetourDistance = stoi(line);
+            } else if (counter % 5 == 6) {
+                vehicleCapacity = stoi(line);
+                Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTimeDriver,
+                                 latestDepartureTimeDriver, maxDetourDistance, vehicleCapacity);
+                Driver *ptrToNewDriver = &newDriver;
+                drivers.push_back(ptrToNewDriver);
+            }
+        }
+    }
+    else{
+        cout << "Error on opening driver log file" << endl;
+    }
+    loadfileDriver.close();
+
+}
+
+void Application::showPortoMap(){
+    Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_strong_nodes_xy.txt", "../Maps/PortoMaps/porto_strong_edges.txt");
+    vector<Coordinates> res;
+    showGraph(&graph, res);
+}
+void Application::showPenafielMap(){
+    Graph<Coordinates> graph = mapParser("../Maps/PenafielMaps/penafiel_strong_nodes_xy.txt", "../Maps/PenafielMaps/penafiel_strong_edges.txt");
+    vector<Coordinates> res;
+    showGraph(&graph, res);
+}
+void Application::showEspinhoMap(){
+    Graph<Coordinates> graph = mapParser("../Maps/EspinhoMaps/espinho_strong_nodes_xy.txt", "../Maps/EspinhoMaps/espinho_strong_edges.txt");
+    vector<Coordinates> res;
+    showGraph(&graph, res);
 }

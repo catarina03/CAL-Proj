@@ -4,7 +4,7 @@
 
 #include "passenger.h"
 
-Passenger::Passenger(int passengerID, string originPassenger, string destinationPassenger, int earliestDepartureTime,
+Passenger::Passenger(int passengerID, int originPassenger, int destinationPassenger, int earliestDepartureTime,
                      int latestDepartureTime):passengerID(passengerID) {
     this->originPassenger = originPassenger;
     this->destinationPassenger = destinationPassenger;
@@ -16,11 +16,11 @@ int Passenger::getPassengerID() {
     return this->passengerID;
 }
 
-string Passenger::getOriginPassenger() {
+int Passenger::getOriginPassenger() {
     return this->originPassenger;
 }
 
-string Passenger::getDestinationPassenger() {
+int Passenger::getDestinationPassenger() {
     return this->destinationPassenger;
 }
 
