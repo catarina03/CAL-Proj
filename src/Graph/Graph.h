@@ -413,9 +413,9 @@ vector<T> Graph<T>::AStarShortestPathByID(const int origin, const int destinatio
     }
     Vertex<T>* orig = findVertexByID(origin);
     Vertex<T>* dest = findVertexByID(destination);
+    Vertex<T>* v;
     orig->dist = euclideanDistance(orig->getInfo(), dest->info);
     q.insert(orig);
-    Vertex<T>* v;
 
     while(!q.empty()){
         v = q.extractMin();
@@ -437,7 +437,6 @@ vector<T> Graph<T>::AStarShortestPathByID(const int origin, const int destinatio
             }
         }
     }
-
 
     vector<T> res;
     res.push_back(dest->info);

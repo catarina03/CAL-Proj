@@ -9,20 +9,9 @@
 
 using namespace std;
 
-int main() {
-    signal(SIGINT, SIG_IGN);  //NEEDED OR ELSE IT CRASHES UBUNTU
-
-    //ACTUAL APP
-    /*
-    Application application("MeetUpRider");
-    startMenu(application);
-    cout << "Exited Successfully! :)" << endl;
-    */
-
-    //TESTING
-    cout << "MeetUpRider" << endl;
+int test(){
     cout << "Loading..." << endl;
-    Graph<Coordinates> graph = mapParser("../Maps/PenafielMaps/penafiel_full_nodes_xy.txt", "../Maps/PenafielMaps/penafiel_full_edges.txt");
+    Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_strong_nodes_xy.txt", "../Maps/PortoMaps/porto_strong_edges.txt");
     cout << "returned to main" << endl;
 
     vector<Graph<Coordinates>> v;
@@ -32,11 +21,23 @@ int main() {
     long count = 0;
 
     for (int i = 0; i < 10; i++) {
+
         auto start = std::chrono::high_resolution_clock::now();
-        vector<int> res = v[i].dfsVector(8438);
+
+        //v[i].dijkstraShortestPathByID(43005); //43005 - Porto, 7929 - Penafiel, 12338 - Espinho
+        //auto mid = std::chrono::high_resolution_clock::now();
+        //vector<Coordinates> res = v[i].getPathToByID(53578); //53578 - Porto, 5033 - Penafiel, 13589 - Espinho
+
+        vector<Coordinates> res = v[i].AStarShortestPathByID(43005, 53578);
+
         auto stop = std::chrono::high_resolution_clock::now();
+
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+        //auto durationDijkstra = std::chrono::duration_cast<std::chrono::microseconds>(mid - start);
+        //auto durationPath = std::chrono::duration_cast<std::chrono::microseconds>(stop - mid);
         cout << (double) duration.count() << endl;
+        //cout << (double) durationDijkstra.count() << endl;
+        //cout << (double) durationPath.count() << endl;
         count += duration.count();
         res.clear();
     }
@@ -44,14 +45,37 @@ int main() {
     double avg = count/10;
     cout << "[Average] - " << avg << endl;
 
+    return 0;
+}
 
 
-    //graph.dijkstraShortestPathByID(8923); //27744 - Porto, 7100 - Penafiel, 8923 - Espinho
+int main() {
+    signal(SIGINT, SIG_IGN);  //NEEDED OR ELSE IT CRASHES UBUNTU
+
+    cout << "MeetUpRider" << endl;
+
+    //ACTUAL APP
+    /*
+    Application application("MeetUpRider");
+    startMenu(application);
+    cout << "Exited Successfully! :)" << endl;
+    */
+
+    test();
+    cout << "tests done" << endl;
+
+    //Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_strong_nodes_xy.txt", "../Maps/PortoMaps/porto_strong_edges.txt");
+
+
+
+    //graph.dijkstraShortestPathByID(7929); //43005 - Porto, 7929 - Penafiel, 12338 - Espinho
     //cout<<"djisktra"<<endl;
-    //vector<Coordinates> res = graph.getPathToByID(4777); //26781 - Porto, 426 - Penafiel, 4777 - Espinho
+    //vector<Coordinates> res = graph.getPathToByID(5033); //53578 - Porto, 5033 - Penafiel, 13589 - Espinho
+    //vector<Coordinates> res = graph.AStarShortestPathByID(7929, 5033);
     //cout<<"res"<<endl;
+    //vector<Coordinates> res;
     //res.clear();
-    //showGraphbyID(&graph, res);
+    //showGraph(&graph, res);
     //cout << "Exited sucessfully" << endl;
 
     return 0;
