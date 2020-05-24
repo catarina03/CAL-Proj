@@ -99,19 +99,24 @@ int Application::showResults(string location, int origin, int destination){
         vector<Coordinates> res = graph.AStarShortestPathByID(origin, destination);
         showGraph(&graph, res);
     }
-    /*
-    Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
+    
+    //Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
 
+    //floyd warshall
+    
+    //graph.floydWarshallShortestPath();
+    //vector<Coordinates> path=graph.getfloydWarshallPath(make_pair(0,0),make_pair(333,222));
+    
     //Dijkstra
 
-    graph.dijkstraShortestPathByID(0);
+    //graph.dijkstraShortestPathByID(0);
     //vector<Coordinates> path = graph.getPathTo(make_pair(300, 600)); //Works in 4x4 and 8x8
 
-    vector<Coordinates> path = graph.getPathTo(make_pair(333, 222)); //Works in 4x4 and 8x8 and 16x16
+    //vector<Coordinates> path = graph.getPathTo(make_pair(333, 222)); //Works in 4x4 and 8x8 and 16x16
 
 
-    showGraph(&graph, path);
-    */
+    //showGraph(&graph, path);
+    
     /*
     //A*
     //16x16
@@ -120,6 +125,7 @@ int Application::showResults(string location, int origin, int destination){
     vector<Coordinates> result = graph.AStarShortestPathByInfo(orig, dest);
     showGraph(&graph, result);
      */
+
     return 0;
 }
 
