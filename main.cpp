@@ -1,5 +1,6 @@
 #include <iostream>
 #include <csignal>
+#include <chrono>
 #include "Utils/Utils.h"
 #include "Utils/Visualization.h"
 #include "src/Graph/Graph.h"
@@ -20,21 +21,25 @@ int main() {
 
     //TESTING
     cout << "MeetUpRider" << endl;
-    //Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_strong_nodes_xy.txt", "../Maps/PortoMaps/porto_strong_edges.txt");
     Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_full_nodes_xy.txt", "../Maps/PortoMaps/porto_full_edges.txt");
-    //vector<Coordinates> res = graph.AStarShortestPathByID(3038, 4922);
-    cout<<"returned to main"<<endl;
+    cout << "returned to main" << endl;
+    vector<Graph<Coordinates>> v;
+    for (int i = 0; i < 10; i++) {
+        v.push_back(graph);
+    }
+    long count = 0;
 
-    graph.BfsConectedGraph(27744);
+    for (int i = 0; i < 10; i++) {
+        auto start = std::chrono::high_resolution_clock::now();
+        v[i].BfsConectedGraph(1);
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+        cout << (double) duration.count() << endl;
+        count += duration.count();
+    }
 
-    vector<Coordinates>res= graph.bfs(27744);
-    //graph.dijkstraShortestPathByID(27744);
-    cout<<"djisktra"<<endl;
-    //vector<Coordinates> res = graph.getPathToByID(26781);
-    //vector<Coordinates> res;
-    cout<<"res"<<endl;
-    //res.clear();
-    showGraph(&graph, res);
+    double avg = count/10;
+    cout << "[Average] - " << avg << endl;
 
     return 0;
 };
