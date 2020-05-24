@@ -155,7 +155,7 @@ public:
     int nearestNeighbourAux(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
 
 	//FP04
-    vector<T> bfs (const int &origin);
+    vector<int> bfs (const int &origin);
     void BfsConectedGraph(const int &origin);
 
     vector<T> dfs (const T &origin, const T &dest);
@@ -681,8 +681,8 @@ int Graph<T>::dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res){
 }
 
 template<class T>
-vector<T> Graph<T>::bfs(const int &origin) {
-    vector<T> res;
+vector<int> Graph<T>::bfs(const int &origin) {
+    vector<int> res;
     auto s = findVertexByID(origin);
     if (s == NULL)
         return res;
@@ -694,7 +694,7 @@ vector<T> Graph<T>::bfs(const int &origin) {
     while (!q.empty()) {
         auto v = q.front();
         q.pop();
-        res.push_back(v->info);
+        res.push_back(v->id);
         for (auto & e : v->outgoing) {
             auto w = e.dest;
             if ( ! w->visited ) {
