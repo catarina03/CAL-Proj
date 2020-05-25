@@ -140,9 +140,6 @@ class Graph {
     double ** v_distance = nullptr;//floyd-warshall
     int **path = nullptr;
 
-
-
-
 public:
     vector<T>duplicate_nodes;
 	Vertex<T> *findVertexByInfo(const T &in) const;
@@ -161,7 +158,9 @@ public:
     vector<int> bfs (const int &origin);
     void BfsConectedGraph(const int &origin);
 
-    vector<T> dfs (const T &origin, const T &dest);
+    void DFSConnectedGraph(Vertex<T>* vertex, vector<int> &ids);
+    vector<int> dfsVector(const int orig);
+    vector<T> dfs(const T &origin, const T &dest);
     int dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
 
     // Fp05 - single source
@@ -177,9 +176,6 @@ public:
 	// Fp05 - all pairs
 	void floydWarshallShortestPath();   //TODO...
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;   //TODO...
-
-	void filterGraph();
-
 };
 
 
@@ -258,6 +254,7 @@ bool Graph<T>::addEdgeByID(const int sourc, const int dest, double w) {
     v1->addEdge(v2,w);
     return true;
 }
+
 
 template <class T>
 void deleteMatrix(T **m, int n) {
@@ -424,9 +421,9 @@ vector<T> Graph<T>::AStarShortestPathByID(const int origin, const int destinatio
     }
     Vertex<T>* orig = findVertexByID(origin);
     Vertex<T>* dest = findVertexByID(destination);
+    Vertex<T>* v;
     orig->dist = euclideanDistance(orig->getInfo(), dest->info);
     q.insert(orig);
-    Vertex<T>* v;
 
     while(!q.empty()){
         v = q.extractMin();
@@ -448,7 +445,6 @@ vector<T> Graph<T>::AStarShortestPathByID(const int origin, const int destinatio
             }
         }
     }
-
 
     vector<T> res;
     res.push_back(dest->info);
@@ -576,6 +572,73 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
         res.push_back(vertexSet[j]->info);
     reverse(res.begin(), res.end());
     return res;
+}
+
+/*
+ * Muda o grafo
+ */
+template <class T>
+void Graph<T>::DFSConnectedGraph(Vertex<T>* origin, vector<int> &ids){
+    Vertex<T>* vertex = findVertexByID(origin);
+    if (vertex == NULL)
+        return;
+    for (auto v : vertexSet) {
+        v->visited = false;
+    }
+    vertex->visited = true;
+    stack<Vertex<T>*> s;
+    s.push(vertex);
+
+    while(!s.empty()){
+        Vertex<T>* v = s.top();
+        s.pop();
+        for (auto e : v->outgoing){
+            Vertex<T>* dest = e.dest;
+            if (!dest->visited){
+                s.push(dest);
+                dest->visited = true;
+            }
+        }
+    }
+    for(auto i=vertexSet.begin();i!=vertexSet.end();i++){
+        if (!((*i)->visited)){
+            vertexSet.erase(i);
+            i--;
+        }
+    }
+}
+
+
+/*
+ * Returns the vector with the SCC vertex ids
+ */
+template <class T>
+vector<int> Graph<T>::dfsVector(const int orig){
+    vector<int> ids;
+    Vertex<T>* vertex = findVertexByID(orig);
+    if (vertex == NULL){
+        return ids;
+    }
+    for (auto v : vertexSet) {
+        v->visited = false;
+    }
+    vertex->visited = true;
+    stack<Vertex<T>*> s;
+    s.push(vertex);
+
+    while(!s.empty()){
+        Vertex<T>* v = s.top();
+        s.pop();
+        ids.push_back(v->id);
+        for (auto e : v->outgoing){
+            Vertex<T>* dest = e.dest;
+            if (!dest->visited){
+                s.push(dest);
+                dest->visited = true;
+            }
+        }
+    }
+    return ids;
 }
 
 

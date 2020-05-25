@@ -180,6 +180,53 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
 
 }
 
+void showGraphbyID(Graph<Coordinates> *graph, vector<int> &res){
+    GraphViewer *gv = new GraphViewer(600, 600, false);
+    createGraph(gv);
+
+    int id = 0;
+    vector<Vertex<Coordinates> *> vertexSet = graph->getVertexSet();
+    if (res.empty()){
+        for (auto v : vertexSet){
+            gv->addNode(v->getID(), v->getInfo().first, v->getInfo().second);
+            gv->setVertexLabel(v->getID(), to_string(v->getID()));
+        }
+        for (auto v : vertexSet){
+            for (auto e : v->getOutgoing()){
+                gv->addEdge(id, v->getID(), e.getDest()->getID(), EdgeType::DIRECTED);
+                id++;
+            }
+        }
+    }
+    else{
+        for (Vertex<Coordinates>* v : vertexSet){
+            gv->addNode(v->getID(), v->getInfo().first, v->getInfo().second);
+            gv->setVertexLabel(v->getID(), to_string(v->getID()));
+            if (find(res.begin(), res.end(), v->getID()) != res.end()){
+                gv->setVertexColor(v->getID(), "red");
+            }
+        }
+        for (auto v : vertexSet){
+            for (auto e : v->getOutgoing()){
+                gv->addEdge(id, v->getID(), e.getDest()->getID(), EdgeType::DIRECTED);
+                if (find(res.begin(), res.end(), v->getID()) != res.end() && find(res.begin(), res.end(), e.getDest()->getID()) != res.end()){
+                    gv->setEdgeColor(id, "red");
+                    gv->setEdgeThickness(id, 15);
+                }
+                id++;
+            }
+        }
+        gv->setVertexColor(graph->findVertexByID(res[0])->getID(), "green");
+        gv->setVertexColor(graph->findVertexByID(res[res.size()-1])->getID(), "green");
+    }
+
+    gv->rearrange();
+    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+    getchar();
+    gv->closeWindow();
+
+}
+
 
 void nodeParser(const string& node_path, Graph<Coordinates> *graph) {
     string s, aux, total;
@@ -287,6 +334,5 @@ Graph<Coordinates> mapParser(const string& node_path, const string& edge_path){
     nodeParser(node_path, &graph);
     edgeParser(edge_path, &graph);
     return graph;
-
 }
 
