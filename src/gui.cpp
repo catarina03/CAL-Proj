@@ -188,10 +188,9 @@ void passengerMenu(Application &application) {
          string fileEdge = "../Maps/"+location+"Maps/"+lower_location+"_full_edges.txt";
          Graph<Coordinates> graph = mapParser(fileNode, fileEdge);
          vector<Coordinates> res = graph.bfs(originPassenger);
-         //showGraph(&graph, res);
+         showGraph(&graph, res);
          getchar();
          startMenu(application);
-
      }
 
 }
@@ -335,8 +334,8 @@ void driverMenu(Application &application) {
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||             1) Find a ride!                ||||||||||" << endl;
-    cout << "||||||||||                                            ||||||||||" << endl;
-    cout << "||||||||||             2) Go back to main menu        ||||||||||" << endl;;
+    cout << "||||||||||             2) Connectivity               ||||||||||" << endl;
+    cout << "||||||||||             3) Go back to main menu        ||||||||||" << endl;;
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -354,6 +353,18 @@ void driverMenu(Application &application) {
             exit(2);  //processamento dos dados falhou
         }
     }
+    if(choice == 2){
+        string lower_location = location;
+        transform(lower_location.begin(), lower_location.end(), lower_location.begin(),
+                  [](unsigned char c){ return std::tolower(c); });
+        string fileNode = "../Maps/"+location+"Maps/"+lower_location+"_full_nodes_xy.txt";
+        string fileEdge = "../Maps/"+location+"Maps/"+lower_location+"_full_edges.txt";
+        Graph<Coordinates> graph = mapParser(fileNode, fileEdge);
+        vector<Coordinates> res = graph.bfs(originDriver);
+        showGraph(&graph, res);
+        getchar();
+        startMenu(application);
+    } else return;
 
 }
 
