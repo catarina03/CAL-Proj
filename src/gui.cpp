@@ -334,7 +334,7 @@ void driverMenu(Application &application) {
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||             1) Find a ride!                ||||||||||" << endl;
-    cout << "||||||||||             2) Connectivity               ||||||||||" << endl;
+    cout << "||||||||||             2) Connectivity                ||||||||||" << endl;
     cout << "||||||||||             3) Go back to main menu        ||||||||||" << endl;;
     cout << "||||||||||                                            ||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -364,7 +364,7 @@ void driverMenu(Application &application) {
         showGraph(&graph, res);
         getchar();
         startMenu(application);
-    } else return;
+    } startMenu(application);
 
 }
 

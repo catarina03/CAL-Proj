@@ -143,7 +143,6 @@ void Application::updateDriverRecord(Driver *driver, string location){
     string line;
     ifstream loadfile;
     string filenameDriver = "../src/driverRecord" + location + ".txt";
-    cout << filenameDriver << endl;
     loadfile.open(filenameDriver);
     if(loadfile.is_open()){
         while(getline(loadfile, line)){
