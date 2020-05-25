@@ -19,6 +19,7 @@ public:
     string name;
     vector<Passenger *> passengers;
     vector<Driver *> drivers;
+    vector<int> indexes;
 
     explicit Application(string name);
 
@@ -32,6 +33,7 @@ public:
 
     int findRide();
     int showResults(string location, int origin, int destination);
+
 
     void updatePassengerRecord(Passenger *passenger, string location);
     void updateDriverRecord(Driver *driver, string location);

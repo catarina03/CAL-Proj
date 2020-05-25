@@ -79,6 +79,15 @@ int Application::findRide() {
 
     //fazemos aqui o processamento dos dados de entrada e dos grafos
 
+    int originDriver = drivers[0]->getOriginDriver();
+    int destinationDriver = drivers[0]->getDestinationDriver();
+    indexes.push_back(originDriver);
+    for(Passenger* passenger : passengers){
+        indexes.push_back(passenger->getOriginPassenger());
+        indexes.push_back(passenger->getDestinationPassenger());
+    }
+    indexes.push_back(destinationDriver);
+
     return 0;
 }
 
@@ -86,12 +95,27 @@ int Application::showResults(string location, int origin, int destination){
 
     if(location == "Porto"){
         Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_strong_nodes_xy.txt", "../Maps/PortoMaps/porto_strong_edges.txt");
-        vector<Coordinates> res = graph.AStarShortestPathByID(origin, destination);
+        vector<Coordinates> res;
+        vector<Coordinates> tempStorage;
+        for(unsigned int i = 0; i < (indexes.size()-1); i++){
+            tempStorage = graph.AStarShortestPathByID(indexes.at(i), indexes.at(i+1));
+            for(unsigned int j = 0; j < tempStorage.size(); j++){
+                res.push_back(tempStorage.at(i));
+            }
+        }
+
         showGraph(&graph, res);
     }
     else if(location == "Penafiel"){
         Graph<Coordinates> graph = mapParser("../Maps/PenafielMaps/penafiel_strong_nodes_xy.txt", "../Maps/PenafielMaps/penafiel_strong_edges.txt");
-        vector<Coordinates> res = graph.AStarShortestPathByID(origin, destination);
+        vector<Coordinates> res;
+        vector<Coordinates> tempStorage;
+        for(unsigned int i = 0; i < (indexes.size()-1); i++){
+            tempStorage = graph.AStarShortestPathByID(indexes.at(i), indexes.at(i+1));
+            for(unsigned int j = 0; j < tempStorage.size(); j++){
+                res.push_back(tempStorage.at(i));
+            }
+        }
         showGraph(&graph, res);
     }
     else if (location == "Espinho"){
