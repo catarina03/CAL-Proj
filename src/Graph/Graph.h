@@ -8,6 +8,7 @@
 #include <queue>
 #include <list>
 #include <climits>
+#include <cfloat>
 #include <cmath>
 #include <stack>
 #include <algorithm>
@@ -136,8 +137,10 @@ double Edge<T>::getWeight() const { return this->weight; }
 template <class T>
 class Graph {
 	vector<Vertex<T> *> vertexSet;    // vertex set
-    vector<vector<double>> v_distance;      //Floyd Warshal matrix
-    vector<vector<T>> path; //Floyd Warshal return path
+    double ** v_distance = nullptr;//floyd-warshall
+    int **path = nullptr;
+
+
 
 
 public:
@@ -254,6 +257,16 @@ bool Graph<T>::addEdgeByID(const int sourc, const int dest, double w) {
         return false;
     v1->addEdge(v2,w);
     return true;
+}
+
+template <class T>
+void deleteMatrix(T **m, int n) {
+    if (m != nullptr) {
+        for (int i = 0; i < n; i++)
+            if (m[i] != nullptr)
+                delete [] m[i];
+        delete [] m;
+    }
 }
 
 
@@ -517,130 +530,54 @@ vector<T> Graph<T>::getPathToByID(const int dest) const{  //DONE
 /**************** All Pairs Shortest Path  ***************/
 
 template<class T>
-void Graph<T>::floydWarshallShortestPath() { //DONE?
-	// TODO
+void Graph<T>::floydWarshallShortestPath() {
+    unsigned n = vertexSet.size();
+    deleteMatrix(v_distance, n);
+    deleteMatrix(path, n);
+    v_distance = new double *[n];
+    path = new int *[n];
 
-    // Distance initialization
-    for (int i = 0; i < this->vertexSet.size(); i++) {
-        vector<double> tmp;
-        vector<int> tmp2;
-        for (int j = 0; j < this->vertexSet.size(); j++) {
-            tmp.push_back(10000000);
-            tmp2.push_back(-1);
-            if (i == j) {
-                tmp[j] = 0;
-                tmp2[j] = i;
-            }
-            else
-                for (auto& w : this->vertexSet[i]->adj)
-                    if (w.dest == this->vertexSet[j]) {
-                        tmp[j] = w.weight;
-                        tmp2[j] = i;
-                    }
-
+    for (unsigned i = 0; i < n; i++) {
+        v_distance[i] = new double[n];
+        path[i] = new int[n];
+        for (unsigned j = 0; j < n; j++) {
+            v_distance[i][j] = i == j? 0 : INF;
+            path[i][j] = -1;
         }
-        this->v_distance.push_back(tmp);
-        this->path.push_back(tmp2);
-    }
-
-
-    for (int k = 1; k < this->vertexSet.size(); k++) {
-        for (int i = 0; i < this->vertexSet.size(); i++)
-            for (int j = 0; j < this->vertexSet.size(); j++) {
-                if (this->v_distance[i][j] > this->v_distance[i][k] + this->v_distance[k][j]) {
-                    this->v_distance[i][j] = this->v_distance[i][k] + this->v_distance[k][j];
-                    this->path[i][j] = k;
-                }
-            }
-    }
-
-	/*
-	vector<vector<double>> v_distance;
-	vector<vector<int>> v_path;
-	for (unsigned i = 0; i < vertexSet.size(); i++){
-	    vector<double> aux_d;
-	    vector<int> aux_p;
-        for (unsigned j = 0; j < vertexSet.size(); j++){
-            v_distance[i].push_back(INT_MAX);
-            v_path[i].push_back(-1);
-            if (i == j){
-                v_distance[i][j] = 0;
-                v_path[i][j] = i; //O path é o próprio
-            }
-            else{
-                for (auto v: vertexSet[i]->adj){
-                    if (v.dest == vertexSet[j]){
-                        v_distance[i][j] = v.weight;
-                        v_path[i][j] = i;
-                    }
-                }
-            }
-        }
-	}
-    for (unsigned k = 0; k < vertexSet.size(); k++){
-        for (unsigned i = 0; i < vertexSet.size(); i++){
-            for (unsigned j = 0; j < vertexSet.size(); j++){
-                if (v_distance[i][k] + v_distance[k][j] < v_distance[i][j]) {
-                    v_distance[i][j] = v_distance[i][k] + v_distance[k][j];
-                    v_path[i][j] = k;
-                }
-            }
+        for (auto e : vertexSet[i]->outgoing) {
+            int j = findVertexByInfo(e.dest->info)->getID();
+            v_distance[i][j] = e.weight;
+            path[i][j] = i;
         }
     }
+    for(unsigned k = 0; k < n; k++)
+        for(unsigned i = 0; i < n; i++)
+            for(unsigned j = 0; j < n; j++) {
+                if(v_distance[i][k] == INF || v_distance[k][j] == INF)
+                    continue; // avoid overflow
+                int val = v_distance[i][k] + v_distance[k][j];
+                if (val < v_distance[i][j]) {
+                    v_distance[i][j] = val;
+                    path[i][j] = path[k][j];
+                }
+            }
 
-    for (int i = 0; i < v_distance.size(); i++){
-            this->v_distance.push_back(v_distance[i]);
-            this->path.push_back(v_path[i]);
-    }
-    */
 }
+
 
 template<class T>
 vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
-	/*
-	Vertex<T> origin = findVertex(orig);
-	Vertex<T> destination = findVertex(dest);
-
-
-
     vector<T> res;
-	// TODO
-	return res;
-	 */
-
-    vector<T> res;
-    Vertex<T> *v = findVertex(dest);
-    int i, j;
-    for (i = 0; i < this->vertexSet.size(); i++)
-        if (orig == this->vertexSet[i]->info)
-            break;
-    for (j = 0; j < this->vertexSet.size(); j++)
-        if (dest == this->vertexSet[j]->info)
-            break;
-
-    if (i < j) {
-        stack<int> stack;
-        int path = j;
-        stack.push(j);
-        while (path != i) {
-            path = this->path[i][path];
-            stack.push(path);
-        }
-        while (!stack.empty()) {
-            res.push_back(this->vertexSet[stack.top()]->info);
-            stack.pop();
-        }
-    }
-    else {
-        int path = i;
-        res.push_back(this->vertexSet[i]->info);
-        while (path != j) {
-            path = this->path[path][j];
-            res.push_back(this->vertexSet[path]->info);
-        }
-    }
+    int i = findVertexByInfo(orig)->getID();
+    int j = findVertexByInfo(dest)->getID();
+    if (i == -1 || j == -1 || v_distance[i][j] == INF) // missing or disconnected
+        return res;
+    for ( ; j != -1; j = path[i][j])
+        res.push_back(vertexSet[j]->info);
+    reverse(res.begin(), res.end());
     return res;
 }
+
 
 template<class T>
 vector<T> Graph<T>::dfs(const T &origin, const T &dest) {
