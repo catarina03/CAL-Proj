@@ -38,6 +38,7 @@ class Vertex {
 
 	bool visited = false;		// auxiliary field
 	bool processing = false;	// auxiliary field
+	bool connected=false;       //auxiliary bfs
 
 	void addEdge(Vertex<T> *dest, double w);
 
@@ -157,6 +158,8 @@ public:
     int nearestNeighbourAux(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
 
 	//FP04
+    vector<int> bfs (const int &origin);
+    void BfsConectedGraph(const int &origin);
 
     vector<T> dfs (const T &origin, const T &dest);
     int dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
@@ -222,6 +225,11 @@ template <class T>
 bool Graph<T>::addVertex(const int given_id, const T &in) {
 	if ( findVertexByInfo(in) != NULL)
 		return false;
+	for(int i=0;i<vertexSet.size();i++){
+	    if (vertexSet[i]->id==given_id){
+	        return false;
+	    }
+	}
 	vertexSet.push_back(new Vertex<T>(given_id, in));
 	return true;
 }
@@ -610,6 +618,68 @@ int Graph<T>::dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res){
 }
 
 template<class T>
+vector<int> Graph<T>::bfs(const int &origin) {
+    vector<int> res;
+    auto s = findVertexByID(origin);
+    if (s == NULL)
+        return res;
+    queue<Vertex<T> *> q;
+    for (auto v : vertexSet)
+        v->visited = false;
+    q.push(s);
+    s->visited = true;
+    while (!q.empty()) {
+        auto v = q.front();
+        q.pop();
+        res.push_back(v->id);
+        for (auto & e : v->outgoing) {
+            auto w = e.dest;
+            if ( ! w->visited ) {
+                q.push(w);
+                w->visited = true;
+            }
+        }
+    }
+    return res;
+}
+
+template<class T>
+void Graph<T>::BfsConectedGraph(const int &origin) {
+    //Graph<Coordinates>res;
+
+    auto s = findVertexByID(origin);
+    if (s == NULL)
+        return;
+    queue<Vertex<T> *> q;
+    for (auto v : vertexSet)
+        v->visited = false;
+    q.push(s);
+    s->visited = true;
+    while (!q.empty()) {
+        auto v = q.front();
+        q.pop();
+        //res.addVertex(v->id,v->info);
+        for (auto & e : v->outgoing) {
+            auto w = e.dest;
+            //res.addVertex(w->id,w->info);
+            //res.addEdgeByID(v->id,w->id,e.weight);
+            if ( ! w->visited ) {
+                q.push(w);
+                w->visited = true;
+            }
+        }
+    }
+    for(auto i=vertexSet.begin();i!=vertexSet.end();i++){
+        if (!((*i)->visited)){
+            vertexSet.erase(i);
+            i--;
+        }
+    }
+    return;
+}
+
+
+template<class T>
 vector<T> Graph<T>::nearestNeighbour(const T &origin, const T &destiny){
     auto orig=findVertexByInfo(origin);
     auto dest=findVertexByInfo(destiny);
@@ -682,5 +752,7 @@ vector<T> Graph<T>::twoOptHeuristic(vector<int> &ord, vector<T> &path) {
     return optimalPath;
 }
 */
+
+
 
 #endif /* GRAPH_H_ */

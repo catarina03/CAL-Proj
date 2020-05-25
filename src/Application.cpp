@@ -82,6 +82,7 @@ int Application::findRide() {
     return 0;
 }
 
+
 int Application::showResults(string location, int origin, int destination){
 
     if(location == "Porto"){
