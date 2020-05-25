@@ -286,6 +286,9 @@ void Application::loadPassengerDriverRecord(string location){
     if(loadfileDriver.is_open()){
         while(!loadfileDriver.eof()) {
             getline(loadfileDriver, line);
+            if (line=="\n"||line==""){
+                break;
+            }
             driverID = stoi(line);
             getline(loadfileDriver, line);
             originDriver = stoi(line);
