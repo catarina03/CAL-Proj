@@ -193,9 +193,6 @@ void passengerMenu(Application &application) {
          startMenu(application);
 
      }
-     else{
-         startMenu(application);
-     }
 
 }
 
@@ -357,9 +354,7 @@ void driverMenu(Application &application) {
             exit(2);  //processamento dos dados falhou
         }
     }
-    else{
-        startMenu(application);
-    }
+
 }
 
 void helpMenu(Application &application) {
