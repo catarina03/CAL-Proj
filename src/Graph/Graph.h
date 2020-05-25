@@ -151,7 +151,6 @@ public:
 	vector<Vertex<T> *> getVertexSet() const;
 
     vector<T> nearestNeighbour(const T &origin, const T &destiny);
-
     int nearestNeighbourAux(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
 
 	//FP04
@@ -169,13 +168,12 @@ public:
     void dijkstraShortestPathByID(const int s);
     vector<T> AStarShortestPathByInfo(const T &orig, const T &dest);
     vector<T> AStarShortestPathByID(const int orig, const int dest);
-    void bellmanFordShortestPath(const T &s);   //TODO...
 	vector<T> getPathTo(const T &dest) const;
 	vector<T> getPathToByID(const int dest) const;
 
 	// Fp05 - all pairs
-	void floydWarshallShortestPath();   //TODO...
-	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;   //TODO...
+	void floydWarshallShortestPath();
+	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;
 };
 
 
@@ -455,35 +453,6 @@ vector<T> Graph<T>::AStarShortestPathByID(const int origin, const int destinatio
     }
     reverse(res.begin(), res.end());
     return res;
-}
-
-
-template<class T>
-void Graph<T>::bellmanFordShortestPath(const T &orig) {
-
-	for (auto vertex : vertexSet){
-	    vertex->dist = INT_MAX;
-	    vertex->path = NULL;
-	}
-	Vertex<T> *origin = findVertex(orig);
-	origin->dist = 0;
-	for (int i = 0; i < vertexSet.size() - 1; i++){
-	    for (auto vertex: vertexSet){
-	        for (Edge<T> edge: vertex->adj){
-	            if (edge.dest->dist > vertex->dist + edge.weight){
-                    edge.dest->dist = vertex->dist + edge.weight;
-                    edge.dest->path = vertex;
-	            }
-	        }
-	    }
-	}
-    for (auto vertex: vertexSet){
-        for (Edge<T> edge: vertex->adj){
-            if (edge.dest->dist > vertex->dist + edge.weight){
-                cout << "There are cycle of negative weight" << endl;
-            }
-        }
-    }
 }
 
 
@@ -774,6 +743,7 @@ int Graph<T>::nearestNeighbourAux(Vertex<T> *origin, Vertex<T> *dest, vector<T> 
         }
     }
 }
+
 /*
 template<class T>
 vector<int> Graph<T>::twoOptSwap(const vector<int> &ord, const int &i, const int &k) {
