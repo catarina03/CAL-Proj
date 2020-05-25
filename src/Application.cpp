@@ -82,10 +82,10 @@ int Application::findRide() {
     int originDriver = drivers[0]->getOriginDriver();
     int destinationDriver = drivers[0]->getDestinationDriver();
     indexes.push_back(originDriver);
-    for(Passenger* passenger : passengers){
-        indexes.push_back(passenger->getOriginPassenger());
-        indexes.push_back(passenger->getDestinationPassenger());
-    }
+    //for(Passenger* passenger : passengers){
+    //    indexes.push_back(passenger->getOriginPassenger());
+    //    indexes.push_back(passenger->getDestinationPassenger());
+    //}
     indexes.push_back(destinationDriver);
 
     return 0;
@@ -110,13 +110,13 @@ int Application::showResults(string location, int origin, int destination){
         Graph<Coordinates> graph = mapParser("../Maps/PenafielMaps/penafiel_strong_nodes_xy.txt", "../Maps/PenafielMaps/penafiel_strong_edges.txt");
         vector<Coordinates> res;
         vector<Coordinates> tempStorage;
-        for(unsigned int i = 0; i < (indexes.size()-1); i++){
+        for(unsigned int i = 0; i < indexes.size(); i++){
             tempStorage = graph.AStarShortestPathByID(indexes.at(i), indexes.at(i+1));
             for(unsigned int j = 0; j < tempStorage.size(); j++){
                 res.push_back(tempStorage.at(i));
             }
         }
-        showGraph(&graph, res);
+        //showGraph(&graph, res);
     }
     else if (location == "Espinho"){
         Graph<Coordinates> graph = mapParser("../Maps/EspinhoMaps/espinho_strong_nodes_xy.txt", "../Maps/EspinhoMaps/espinho_strong_edges.txt");
@@ -284,34 +284,31 @@ void Application::loadPassengerDriverRecord(string location){
     string filenameDriver = "../src/driverRecord"+location+".txt";
     loadfileDriver.open(filenameDriver);
     if(loadfileDriver.is_open()){
-        while(getline(loadfile, line)) {
-            counter++;
-            if (counter % 7 == 0) {
-                driverID = stoi(line);
-            } else if (counter % 7 == 1) {
-                originDriver = stoi(line);
-            } else if (counter % 7 == 2) {
-                destinationDriver = stoi(line);
-            } else if (counter % 7 == 3) {
-                earliestDepartureTimeDriver = stoi(line);
-            } else if (counter % 7 == 4) {
-                latestDepartureTimeDriver = stoi(line);
-            } else if (counter % 7 == 5) {
-                maxDetourDistance = stoi(line);
-            } else if (counter % 5 == 6) {
-                vehicleCapacity = stoi(line);
-                Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTimeDriver,
+        while(!loadfileDriver.eof()) {
+            getline(loadfileDriver, line);
+            driverID = stoi(line);
+            getline(loadfileDriver, line);
+            originDriver = stoi(line);
+            getline(loadfileDriver, line);
+            destinationDriver = stoi(line);
+            getline(loadfileDriver, line);
+            earliestDepartureTimeDriver = stoi(line);
+            getline(loadfileDriver, line);
+            latestDepartureTimeDriver = stoi(line);
+            getline(loadfileDriver, line);
+            maxDetourDistance = stoi(line);
+            getline(loadfileDriver, line);
+            vehicleCapacity = stoi(line);
+            Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTimeDriver,
                                  latestDepartureTimeDriver, maxDetourDistance, vehicleCapacity);
-                Driver *ptrToNewDriver = &newDriver;
-                drivers.push_back(ptrToNewDriver);
-            }
+            Driver *ptrToNewDriver = &newDriver;
+            drivers.push_back(ptrToNewDriver);
         }
     }
     else{
         cout << "Error on opening driver log file" << endl;
     }
     loadfileDriver.close();
-
 }
 
 void Application::showPortoMap(){

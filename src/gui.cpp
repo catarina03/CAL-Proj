@@ -336,7 +336,7 @@ void driverMenu(Application &application) {
 
     if(choice == 1){
 
-        if(!application.findRide()){    //se o processamento dos dados retornar sucesso
+        if(application.findRide()){    //se o processamento dos dados retornar sucesso
             application.showResults(location, originDriver, destinationDriver);
             startMenu(application);
         }
