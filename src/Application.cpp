@@ -100,33 +100,6 @@ int Application::showResults(string location, int origin, int destination){
         vector<Coordinates> res = graph.AStarShortestPathByID(origin, destination);
         showGraph(&graph, res);
     }
-    
-    //Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
-
-    //floyd warshall
-    
-    //graph.floydWarshallShortestPath();
-    //vector<Coordinates> path=graph.getfloydWarshallPath(make_pair(0,0),make_pair(333,222));
-    
-    //Dijkstra
-
-    //graph.dijkstraShortestPathByID(0);
-    //vector<Coordinates> path = graph.getPathTo(make_pair(300, 600)); //Works in 4x4 and 8x8
-
-    //vector<Coordinates> path = graph.getPathTo(make_pair(333, 222)); //Works in 4x4 and 8x8 and 16x16
-
-
-    //showGraph(&graph, path);
-    
-    /*
-    //A*
-    //16x16
-    Coordinates orig = make_pair(0, 0);
-    Coordinates dest = make_pair(333, 222);
-    vector<Coordinates> result = graph.AStarShortestPathByInfo(orig, dest);
-    showGraph(&graph, result);
-     */
-
     return 0;
 }
 
@@ -261,7 +234,7 @@ void Application::loadPassengerDriverRecord(string location){
     string filenameDriver = "../src/driverRecord"+location+".txt";
     loadfileDriver.open(filenameDriver);
     if(loadfileDriver.is_open()){
-        while(getline(loadfile, line)) {
+        while(getline(loadfileDriver, line)) {
             counter++;
             if (counter % 7 == 0) {
                 driverID = stoi(line);
@@ -275,7 +248,7 @@ void Application::loadPassengerDriverRecord(string location){
                 latestDepartureTimeDriver = stoi(line);
             } else if (counter % 7 == 5) {
                 maxDetourDistance = stoi(line);
-            } else if (counter % 5 == 6) {
+            } else if (counter % 7 == 6) {
                 vehicleCapacity = stoi(line);
                 Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTimeDriver,
                                  latestDepartureTimeDriver, maxDetourDistance, vehicleCapacity);
