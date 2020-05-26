@@ -11,84 +11,83 @@ Application::Application(string name) {
     this->name = name;
 }
 
-void Application::addPassenger(Passenger *passenger) {
-    int passengerID = passenger->getPassengerID();
+void Application::addPassenger(Passenger passenger) {
+    int passengerID = passenger.getPassengerID();
     if (passengerExists(passengerID)){
         cout << "You're already registered as a passenger on MeetUpRider!" << endl;
     }
     else{
-        this->passengers.push_back(passenger);
+        passengers.push_back(passenger);
     }
 
 }
 
-void Application::removePassenger(Passenger *passenger) {
-    int passengerID = passenger->getPassengerID();
+void Application::removePassenger(Passenger passenger) {
+    int passengerID = passenger.getPassengerID();
     if (!passengerExists(passengerID)){
         cout << "You're trying to delete a passenger that is not registered on MeetUpRider!" << endl;
     }
     else{
         for(int i = 0; i < passengers.size(); i++){
-            if(passengers.at(i)->getPassengerID() == passengerID)
+            if(passengers.at(i).getPassengerID() == passengerID)
                 passengers.erase(passengers.begin()+i);
         }
     }
 }
 
 bool Application::passengerExists(int passengerID) {
-    for(Passenger* passenger : passengers){
-        if(passenger->getPassengerID()==passengerID)
+    for(Passenger passenger : passengers){
+        if(passenger.getPassengerID()==passengerID)
             return true;
     }
     return false;
 }
 
-void Application::addDriver(Driver *driver) {
-    int driverID = driver->getDriverID();
+void Application::addDriver(Driver driver) {
+    int driverID = driver.getDriverID();
     if (driverExists(driverID)){
         cout << "You're already registered as a driver on MeetUpRider!" << endl;
     }
     else{
-        this->drivers.push_back(driver);
+        drivers.push_back(driver);
     }
 
 }
 
-void Application::removeDriver(Driver *driver) {
-    int driverID = driver->getDriverID();
+void Application::removeDriver(Driver driver) {
+    int driverID = driver.getDriverID();
     if (!driverExists(driverID)){
         cout << "You're trying to delete a driver that is not registered on MeetUpRider!" << endl;
     }
     else{
         for(int i = 0; i < drivers.size(); i++){
-            if(drivers.at(i)->getDriverID() == driverID)
+            if(drivers.at(i).getDriverID() == driverID)
                 drivers.erase(drivers.begin()+i);
         }
     }
 }
 
 bool Application::driverExists(int driverID) {
-    for(Driver* driver : drivers){
-        if(driver->getDriverID()==driverID)
+    for(Driver driver : drivers){
+        if(driver.getDriverID()==driverID)
             return true;
     }
     return false;
 }
 
-int Application::findRide() {
+bool Application::findRide() {
 
     //fazemos aqui o processamento dos dados de entrada e dos grafos
-
-    int originDriver = drivers[0]->getOriginDriver();
-    int destinationDriver = drivers[0]->getDestinationDriver();
+    int originDriver = drivers[0].getOriginDriver();
     indexes.push_back(originDriver);
-    //for(Passenger* passenger : passengers){
-    //    indexes.push_back(passenger->getOriginPassenger());
-    //    indexes.push_back(passenger->getDestinationPassenger());
-    //}
+    for(Passenger passenger : passengers){
+        indexes.push_back(passenger.getOriginPassenger());
+        indexes.push_back(passenger.getDestinationPassenger());
+    }
+    int destinationDriver = drivers[0].getDestinationDriver();
     indexes.push_back(destinationDriver);
 
-    return 0;
+    return true;
 }
 
 int Application::showResults(string location, int origin, int destination){
@@ -110,51 +109,27 @@ int Application::showResults(string location, int origin, int destination){
         Graph<Coordinates> graph = mapParser("../Maps/PenafielMaps/penafiel_strong_nodes_xy.txt", "../Maps/PenafielMaps/penafiel_strong_edges.txt");
         vector<Coordinates> res;
         vector<Coordinates> tempStorage;
-        for(unsigned int i = 0; i < indexes.size(); i++){
+        for(unsigned int i = 0; i < indexes.size()-1; i++){
             tempStorage = graph.AStarShortestPathByID(indexes.at(i), indexes.at(i+1));
+            reverse(tempStorage.begin(), tempStorage.end());
             for(unsigned int j = 0; j < tempStorage.size(); j++){
                 res.push_back(tempStorage.at(i));
+
             }
         }
-        //showGraph(&graph, res);
+        reverse(res.begin(), res.end());
+        showGraph(&graph, res);
     }
     else if (location == "Espinho"){
         Graph<Coordinates> graph = mapParser("../Maps/EspinhoMaps/espinho_strong_nodes_xy.txt", "../Maps/EspinhoMaps/espinho_strong_edges.txt");
         vector<Coordinates> res = graph.AStarShortestPathByID(origin, destination);
         showGraph(&graph, res);
     }
-    
-    //Graph<Coordinates> graph = mapParser("../Maps/GridGraphs/16x16/nodes.txt", "../Maps/GridGraphs/16x16/edges.txt");
-
-    //floyd warshall
-    
-    //graph.floydWarshallShortestPath();
-    //vector<Coordinates> path=graph.getfloydWarshallPath(make_pair(0,0),make_pair(333,222));
-    
-    //Dijkstra
-
-    //graph.dijkstraShortestPathByID(0);
-    //vector<Coordinates> path = graph.getPathTo(make_pair(300, 600)); //Works in 4x4 and 8x8
-
-    //vector<Coordinates> path = graph.getPathTo(make_pair(333, 222)); //Works in 4x4 and 8x8 and 16x16
-
-
-    //showGraph(&graph, path);
-    
-    /*
-    //A*
-    //16x16
-    Coordinates orig = make_pair(0, 0);
-    Coordinates dest = make_pair(333, 222);
-    vector<Coordinates> result = graph.AStarShortestPathByInfo(orig, dest);
-    showGraph(&graph, result);
-     */
-
     return 0;
 }
 
 
-void Application::updatePassengerRecord(Passenger *passenger, string location){
+void Application::updatePassengerRecord(Passenger passenger, string location){
     vector<string> initialPassengers;
     string line;
     ifstream loadfile;
@@ -176,11 +151,11 @@ void Application::updatePassengerRecord(Passenger *passenger, string location){
         for(string passenger_loop : initialPassengers){
             updatedfile << passenger_loop << endl;
         }
-        updatedfile << to_string(passenger->getPassengerID()) << endl;
-        updatedfile << to_string(passenger->getOriginPassenger()) << endl;
-        updatedfile << to_string(passenger->getDestinationPassenger()) << endl;
-        updatedfile << to_string(passenger->getEarliestDepartureTime()) << endl;
-        updatedfile << to_string(passenger->getLatestDepartureTime()) << endl;
+        updatedfile << to_string(passenger.getPassengerID()) << endl;
+        updatedfile << to_string(passenger.getOriginPassenger()) << endl;
+        updatedfile << to_string(passenger.getDestinationPassenger()) << endl;
+        updatedfile << to_string(passenger.getEarliestDepartureTime()) << endl;
+        updatedfile << to_string(passenger.getLatestDepartureTime()) << endl;
     }
     else{
         cout << "Error on updating passenger record file" << endl;
@@ -188,7 +163,7 @@ void Application::updatePassengerRecord(Passenger *passenger, string location){
     updatedfile.close();
 }
 
-void Application::updateDriverRecord(Driver *driver, string location){
+void Application::updateDriverRecord(Driver driver, string location){
     vector<string> initialDrivers;
     string line;
     ifstream loadfile;
@@ -211,13 +186,13 @@ void Application::updateDriverRecord(Driver *driver, string location){
         for(string driver_loop : initialDrivers){
             updatedfile << driver_loop << endl;
         }
-        updatedfile << to_string(driver->getDriverID()) << endl;
-        updatedfile << to_string(driver->getOriginDriver()) << endl;
-        updatedfile << to_string(driver->getDestinationDriver()) << endl;
-        updatedfile << to_string(driver->getEarliestDepartureTime()) << endl;
-        updatedfile << to_string(driver->getLatestDepartureTime()) << endl;
-        updatedfile << to_string(driver->getMaxDetourDistance()) << endl;
-        updatedfile << to_string(driver->getVehicleCapacity()) << endl;
+        updatedfile << to_string(driver.getDriverID()) << endl;
+        updatedfile << to_string(driver.getOriginDriver()) << endl;
+        updatedfile << to_string(driver.getDestinationDriver()) << endl;
+        updatedfile << to_string(driver.getEarliestDepartureTime()) << endl;
+        updatedfile << to_string(driver.getLatestDepartureTime()) << endl;
+        updatedfile << to_string(driver.getMaxDetourDistance()) << endl;
+        updatedfile << to_string(driver.getVehicleCapacity()) << endl;
     }
     else{
         cout << "Error on updating driver record file" << endl;
@@ -257,8 +232,7 @@ void Application::loadPassengerDriverRecord(string location){
             else if(counter % 5 == 4){
                 latestDepartureTime = stoi(line);
                 Passenger newPassenger(passengerID, originPassenger, destinationPassenger, earliestDepartureTime, latestDepartureTime);
-                Passenger *ptrToNewPassenger = &newPassenger;
-                passengers.push_back(ptrToNewPassenger);
+                passengers.push_back(newPassenger);
             }
 
         }
@@ -304,8 +278,7 @@ void Application::loadPassengerDriverRecord(string location){
             vehicleCapacity = stoi(line);
             Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTimeDriver,
                                  latestDepartureTimeDriver, maxDetourDistance, vehicleCapacity);
-            Driver *ptrToNewDriver = &newDriver;
-            drivers.push_back(ptrToNewDriver);
+            drivers.push_back(newDriver);
         }
     }
     else{

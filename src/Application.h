@@ -17,26 +17,26 @@
 class Application {
 public:
     string name;
-    vector<Passenger *> passengers;
-    vector<Driver *> drivers;
+    vector<Passenger> passengers;
+    vector<Driver> drivers;
     vector<int> indexes;
 
     explicit Application(string name);
 
-    void addPassenger(Passenger *passenger);
-    void removePassenger(Passenger *passenger);
+    void addPassenger(Passenger passenger);
+    void removePassenger(Passenger passenger);
     bool passengerExists(int passengerID);
 
-    void addDriver(Driver *driver);
-    void removeDriver(Driver *driver);
+    void addDriver(Driver driver);
+    void removeDriver(Driver driver);
     bool driverExists(int driverID);
 
-    int findRide();
+    bool findRide();
     int showResults(string location, int origin, int destination);
 
 
-    void updatePassengerRecord(Passenger *passenger, string location);
-    void updateDriverRecord(Driver *driver, string location);
+    void updatePassengerRecord(Passenger passenger, string location);
+    void updateDriverRecord(Driver driver, string location);
 
     void loadPassengerDriverRecord(string location);
 

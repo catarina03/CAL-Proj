@@ -149,9 +149,9 @@ void passengerMenu(Application &application) {
     //crasha se passengerIDLength for maior que 10...
 
     Passenger newPassenger(passengerID, originPassenger, destinationPassenger, earliestDepartureTime, latestDepartureTime);
-    Passenger *ptrToNewPassenger = &newPassenger;
-    application.addPassenger(ptrToNewPassenger);
-    application.updatePassengerRecord(ptrToNewPassenger, location);
+    //Passenger *ptrToNewPassenger = &newPassenger;
+    application.addPassenger(newPassenger);
+    application.updatePassengerRecord(newPassenger, location);
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -172,7 +172,7 @@ void passengerMenu(Application &application) {
      cin >> choice;
      if(choice == 1){
 
-         if(!application.findRide()){    //se o processamento dos dados retornar sucesso
+         if(application.findRide()){    //se o processamento dos dados retornar sucesso
              application.showResults(location, originPassenger, destinationPassenger);
              startMenu(application);
          }
@@ -313,9 +313,9 @@ void driverMenu(Application &application) {
     //crasha se driverIDLength for maior que 10...
 
     Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTime, latestDepartureTime, maxDetourDistance, vehicleCapacity);
-    Driver *ptrToNewDriver = &newDriver;
-    application.addDriver(ptrToNewDriver);
-    application.updateDriverRecord(ptrToNewDriver, location);
+    //Driver *ptrToNewDriver = &newDriver;
+    application.addDriver(newDriver);
+    application.updateDriverRecord(newDriver, location);
 
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
