@@ -30,7 +30,6 @@ class Vertex {
     int id;
 	T info;						// content of the vertex
 	vector<Edge<T> > outgoing;		// outgoing edges
-    vector<Edge<T> > incoming;		// incoming edges
 	
 	double dist = 0;
 	Vertex<T> *path = NULL;
@@ -709,6 +708,65 @@ void Graph<T>::BfsConectedGraph(const int &origin) {
     return;
 }
 
+template <class T>
+vector<int> Graph<T>::nearestPOI(vector<int> &poi){
+    vector<int> tempStorage;
+    vector<int> res;
+    //Vertex<T> v1, v2;
+    int counter;
+    //Vertex<T> *orig = findVertexByID(poi[0]);
+    /*
+    for(unsigned int i = 0; i < poi.size()-1; i++){
+        tempStorage = AStarShortestPathByID(poi.at(i), poi.at(i+1));
+        for(unsigned int j = 0; j < tempStorage.size(); j++){
+            res.push_back(tempStorage.at(j));
+        }
+        tempStorage.clear();
+    }
+    for (int i = 0; i < res.size()-1; i++){
+        v1 = findVertexByID(res[i]);
+        v2 = findVertexByID(res[i+1]);
+        for (Edge<T> e : v1.outgoing){
+            if (v2 == e.getDest()){
+                counter += e.getWeight();
+            }
+        }
+    }
+
+    for(unsigned int i = 0; i < poi.size()-1; i++){
+        tempStorage = AStarShortestPathByID(orig, poi.at(i));
+        int counter2;
+        for (int i = 0; i < tempStorage.size()-1; i++){
+            v1 = findVertexByID(res[i]);
+            v2 = findVertexByID(res[i+1]);
+            for (Edge<T> e : v1.outgoing){
+                if (v2 == e.getDest()){
+                    counter2 += e.getWeight();
+                }
+            }
+        }
+    }
+    */
+    int count = INT_MAX, tmp = 0;
+
+    Vertex<T> v1 = findVertexByID(poi[0]);
+    for (int i = 0; i < poi.size() - 1; i++) {
+        for (int j = 1; j < poi.size() - 1; j++) {
+            if (find(res.begin(), res.end(), v1.getID()) != res.end()) {
+                Vertex<T> v2 = findVertexByID(poi[j]);
+                tmp = euclideanDistance(v1.getInfo(), v2.getInfo());
+                if (tmp < count && ) {
+                    v1 = v2;
+                }
+            }
+        }
+        res.push_back(v1.id);
+        tmp = INT_MAX;
+    }
+    res.push_back()
+
+
+}
 
 template<class T>
 vector<T> Graph<T>::nearestNeighbour(const T &origin, const T &destiny){
