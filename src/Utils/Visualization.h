@@ -25,6 +25,7 @@ void showFullGraph(GraphViewer *gv, const string& node_path, const string& edge_
 
 //template<class T>
 void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res, vector<int> &poi);
+void showGraphbyID(Graph<Coordinates> *graph, vector<int> &res);
 
 
 //PARSE GRID MAP

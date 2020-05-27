@@ -188,7 +188,9 @@ void passengerMenu(Application &application) {
          string fileEdge = "../Maps/"+location+"Maps/"+lower_location+"_full_edges.txt";
          Graph<Coordinates> graph = mapParser(fileNode, fileEdge);
          vector<Coordinates> res = graph.bfs(originPassenger);
-         showGraph(&graph, res);
+         vector<int> poi;
+         poi.push_back(originPassenger);
+         showGraph(&graph, res, poi);
          getchar();
          startMenu(application);
      }
@@ -361,7 +363,9 @@ void driverMenu(Application &application) {
         string fileEdge = "../Maps/"+location+"Maps/"+lower_location+"_full_edges.txt";
         Graph<Coordinates> graph = mapParser(fileNode, fileEdge);
         vector<Coordinates> res = graph.bfs(originDriver);
-        showGraph(&graph, res);
+        vector<int> poi;
+        poi.push_back(originDriver);
+        showGraph(&graph, res, poi);
         getchar();
         startMenu(application);
     } startMenu(application);

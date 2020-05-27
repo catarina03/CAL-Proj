@@ -270,7 +270,7 @@ void Application::loadPassengerDriverRecord(string location){
     if(loadfileDriver.is_open()){
         while(!loadfileDriver.eof()) {
             getline(loadfileDriver, line);
-            if (line=="\n"||line==""){
+            if (line=="\n"||line=="")
                 break;
             counter++;
             if (counter % 7 == 0) {
@@ -289,8 +289,7 @@ void Application::loadPassengerDriverRecord(string location){
                 vehicleCapacity = stoi(line);
                 Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTimeDriver,
                                  latestDepartureTimeDriver, maxDetourDistance, vehicleCapacity);
-                Driver *ptrToNewDriver = &newDriver;
-                drivers.push_back(ptrToNewDriver);
+                drivers.push_back(newDriver);
             }
             driverID = stoi(line);
             getline(loadfileDriver, line);
