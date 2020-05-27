@@ -78,13 +78,14 @@ bool Application::driverExists(int driverID) {
 bool Application::findRide() {
 
     //fazemos aqui o processamento dos dados de entrada e dos grafos
-    int originDriver = drivers[0].getOriginDriver();
+
+    int originDriver = drivers[drivers.size()-1].getOriginDriver();
     indexes.push_back(originDriver);
     for(Passenger passenger : passengers){
         indexes.push_back(passenger.getOriginPassenger());
         indexes.push_back(passenger.getDestinationPassenger());
     }
-    int destinationDriver = drivers[0].getDestinationDriver();
+    int destinationDriver = drivers[drivers.size()-1].getDestinationDriver();
     indexes.push_back(destinationDriver);
 
     return true;
