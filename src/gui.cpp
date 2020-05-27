@@ -368,7 +368,7 @@ void driverMenu(Application &application) {
         showGraph(&graph, res, poi);
         getchar();
         startMenu(application);
-    } startMenu(application);
+    }
 
 }
 
