@@ -101,9 +101,9 @@ int Application::showResults(string location, int origin, int destination){
             for(unsigned int j = 0; j < tempStorage.size(); j++){
                 res.push_back(tempStorage.at(i));
             }
+            tempStorage.clear();
         }
-
-        showGraph(&graph, res);
+        showGraph(&graph, res, indexes);
     }
     else if(location == "Penafiel"){
         Graph<Coordinates> graph = mapParser("../Maps/PenafielMaps/penafiel_strong_nodes_xy.txt", "../Maps/PenafielMaps/penafiel_strong_edges.txt");
@@ -111,20 +111,25 @@ int Application::showResults(string location, int origin, int destination){
         vector<Coordinates> tempStorage;
         for(unsigned int i = 0; i < indexes.size()-1; i++){
             tempStorage = graph.AStarShortestPathByID(indexes.at(i), indexes.at(i+1));
-            reverse(tempStorage.begin(), tempStorage.end());
-
             for(unsigned int j = 0; j < tempStorage.size(); j++){
                 res.push_back(tempStorage.at(j));
             }
             tempStorage.clear();
         }
-        reverse(res.begin(), res.end());
-        showGraph(&graph, res);
+        showGraph(&graph, res, indexes);
     }
     else if (location == "Espinho"){
         Graph<Coordinates> graph = mapParser("../Maps/EspinhoMaps/espinho_strong_nodes_xy.txt", "../Maps/EspinhoMaps/espinho_strong_edges.txt");
-        vector<Coordinates> res = graph.AStarShortestPathByID(origin, destination);
-        showGraph(&graph, res);
+        vector<Coordinates> res;
+        vector<Coordinates> tempStorage;
+        for(unsigned int i = 0; i < indexes.size()-1; i++){
+            tempStorage = graph.AStarShortestPathByID(indexes.at(i), indexes.at(i+1));
+            for(unsigned int j = 0; j < tempStorage.size(); j++){
+                res.push_back(tempStorage.at(j));
+            }
+            tempStorage.clear();
+        }
+        showGraph(&graph, res, indexes);
     }
     return 0;
 }
@@ -169,7 +174,6 @@ void Application::updateDriverRecord(Driver driver, string location){
     string line;
     ifstream loadfile;
     string filenameDriver = "../src/driverRecord" + location + ".txt";
-    cout << filenameDriver << endl;
     loadfile.open(filenameDriver);
     if(loadfile.is_open()){
         while(getline(loadfile, line)){
@@ -216,7 +220,11 @@ void Application::loadPassengerDriverRecord(string location){
 
     loadfile.open(filenamePassenger);
     if(loadfile.is_open()){
-        while(getline(loadfile, line)){
+        while(!loadfile.eof()){
+            getline(loadfile, line);
+            if (line=="\n"||line==""){
+                break;
+            }
             counter++;
             if(counter % 5 == 0){
                 passengerID = stoi(line);
@@ -291,15 +299,21 @@ void Application::loadPassengerDriverRecord(string location){
 void Application::showPortoMap(){
     Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_strong_nodes_xy.txt", "../Maps/PortoMaps/porto_strong_edges.txt");
     vector<Coordinates> res;
-    showGraph(&graph, res);
+    vector<int> poi;
+    poi.clear();
+    showGraph(&graph, res, poi);
 }
 void Application::showPenafielMap(){
     Graph<Coordinates> graph = mapParser("../Maps/PenafielMaps/penafiel_strong_nodes_xy.txt", "../Maps/PenafielMaps/penafiel_strong_edges.txt");
     vector<Coordinates> res;
-    showGraph(&graph, res);
+    vector<int> poi;
+    poi.clear();
+    showGraph(&graph, res, poi);
 }
 void Application::showEspinhoMap(){
     Graph<Coordinates> graph = mapParser("../Maps/EspinhoMaps/espinho_strong_nodes_xy.txt", "../Maps/EspinhoMaps/espinho_strong_edges.txt");
     vector<Coordinates> res;
-    showGraph(&graph, res);
+    vector<int> poi;
+    poi.clear();
+    showGraph(&graph, res, poi);
 }

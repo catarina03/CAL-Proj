@@ -130,12 +130,14 @@ void showFullGraph(GraphViewer *gv, const string& node_path, const string& edge_
 }
 
 //template<class T>
-void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
+void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res, vector<int> &poi){
     GraphViewer *gv = new GraphViewer(600, 600, false);
     createGraph(gv);
 
+
     int id = 0;
     vector<Vertex<Coordinates> *> vertexSet = graph->getVertexSet();
+    Coordinates tmp;
     if (res.empty()){
         for (auto v : vertexSet){
             gv->addNode(v->getID(), v->getInfo().first, v->getInfo().second);
@@ -153,24 +155,24 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
             gv->addNode(v->getID(), v->getInfo().first, v->getInfo().second);
             gv->setVertexLabel(v->getID(), to_string(v->getID()));
             if (find(res.begin(), res.end(), v->getInfo()) != res.end()){
+                if(find(poi.begin(), poi.end(), v->getID()) != poi.end()){
+                    gv->setVertexSize(v->getID(), 50);
+                }
                 gv->setVertexColor(v->getID(), "red");
             }
+
         }
         for (auto v : vertexSet){
             for (auto e : v->getOutgoing()){
                 gv->addEdge(id, v->getID(), e.getDest()->getID(), EdgeType::DIRECTED);
                  if (find(res.begin(), res.end(), v->getInfo()) != res.end() && find(res.begin(), res.end(), e.getDest()->getInfo()) != res.end()){
-                    gv->setEdgeColor(id, "red");
-                    gv->setEdgeThickness(id, 15);
+                     gv->setEdgeColor(id, "red");
+                     gv->setEdgeThickness(id, 15);
+                     tmp = v->getInfo();
                 }
                 id++;
             }
         }
-        Vertex<Coordinates>* v1 = graph->findVertexByInfo(res[0]);
-        Vertex<Coordinates>* v2 = graph->findVertexByInfo(res[res.size()-1]);
-        gv->setVertexColor(v1->getID(), "green");
-        gv->setVertexColor(v2->getID(), "green");
-
     }
 
     gv->rearrange();
