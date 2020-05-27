@@ -707,7 +707,7 @@ void Graph<T>::BfsConectedGraph(const int &origin) {
     }
     return;
 }
-
+/*
 template <class T>
 vector<int> Graph<T>::nearestPOI(vector<int> &poi){
     vector<int> tempStorage;
@@ -715,6 +715,8 @@ vector<int> Graph<T>::nearestPOI(vector<int> &poi){
     //Vertex<T> v1, v2;
     int counter;
     //Vertex<T> *orig = findVertexByID(poi[0]);
+
+    */
     /*
     for(unsigned int i = 0; i < poi.size()-1; i++){
         tempStorage = AStarShortestPathByID(poi.at(i), poi.at(i+1));
@@ -747,6 +749,7 @@ vector<int> Graph<T>::nearestPOI(vector<int> &poi){
         }
     }
     */
+    /*
     int count = INT_MAX, tmp = 0;
 
     Vertex<T> v1 = findVertexByID(poi[0]);
@@ -766,7 +769,7 @@ vector<int> Graph<T>::nearestPOI(vector<int> &poi){
     res.push_back()
 
 
-}
+}*/
 
 template<class T>
 vector<T> Graph<T>::nearestNeighbour(const T &origin, const T &destiny){
