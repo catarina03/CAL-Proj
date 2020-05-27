@@ -112,10 +112,11 @@ int Application::showResults(string location, int origin, int destination){
         for(unsigned int i = 0; i < indexes.size()-1; i++){
             tempStorage = graph.AStarShortestPathByID(indexes.at(i), indexes.at(i+1));
             reverse(tempStorage.begin(), tempStorage.end());
-            for(unsigned int j = 0; j < tempStorage.size(); j++){
-                res.push_back(tempStorage.at(i));
 
+            for(unsigned int j = 0; j < tempStorage.size(); j++){
+                res.push_back(tempStorage.at(j));
             }
+            tempStorage.clear();
         }
         reverse(res.begin(), res.end());
         showGraph(&graph, res);

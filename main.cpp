@@ -18,18 +18,18 @@ int main() {
     cout << "Exited Successfully! :)" << endl;
 
 
+
+
     //TESTING
-    /*
+/*
     cout << "MeetUpRider" << endl;
-    Graph<Coordinates> graph = mapParser("../Maps/PortoMaps/porto_strong_nodes_xy.txt", "../Maps/PortoMaps/porto_strong_edges.txt");
-    //vector<Coordinates> res = graph.AStarShortestPathByID(3038, 4922);
+    Graph<Coordinates> graph = mapParser("../Maps/PenafielMaps/penafiel_strong_nodes_xy.txt", "../Maps/PenafielMaps/penafiel_strong_edges.txt");
+    vector<Coordinates> res = graph.AStarShortestPathByID(10200, 591);
     cout<<"returned to main"<<endl;
-    graph.dijkstraShortestPathByID(27744);
-    cout<<"djisktra"<<endl;
-    vector<Coordinates> res = graph.getPathToByID(26781);
-    cout<<"res"<<endl;
+
     //res.clear();
     showGraph(&graph, res);
     */
+
     return 0;
 };

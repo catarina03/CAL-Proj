@@ -412,7 +412,6 @@ vector<T> Graph<T>::AStarShortestPathByID(const int origin, const int destinatio
     for (Vertex<T> * vertex : vertexSet) {
         vertex->dist = INT_MAX;
         vertex->path = NULL;
-        //q.insert(vertex);
     }
     Vertex<T>* orig = findVertexByID(origin);
     Vertex<T>* dest = findVertexByID(destination);

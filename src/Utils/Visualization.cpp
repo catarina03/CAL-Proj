@@ -159,7 +159,7 @@ void showGraph(Graph<Coordinates> *graph, vector<Coordinates> &res){
         for (auto v : vertexSet){
             for (auto e : v->getOutgoing()){
                 gv->addEdge(id, v->getID(), e.getDest()->getID(), EdgeType::DIRECTED);
-                if (find(res.begin(), res.end(), v->getInfo()) != res.end() && find(res.begin(), res.end(), e.getDest()->getInfo()) != res.end()){
+                 if (find(res.begin(), res.end(), v->getInfo()) != res.end() && find(res.begin(), res.end(), e.getDest()->getInfo()) != res.end()){
                     gv->setEdgeColor(id, "red");
                     gv->setEdgeThickness(id, 15);
                 }
