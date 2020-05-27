@@ -149,9 +149,9 @@ void passengerMenu(Application &application) {
     //crasha se passengerIDLength for maior que 10...
 
     Passenger newPassenger(passengerID, originPassenger, destinationPassenger, earliestDepartureTime, latestDepartureTime);
-    Passenger *ptrToNewPassenger = &newPassenger;
-    application.addPassenger(ptrToNewPassenger);
-    application.updatePassengerRecord(ptrToNewPassenger, location);
+    //Passenger *ptrToNewPassenger = &newPassenger;
+    application.addPassenger(newPassenger);
+    application.updatePassengerRecord(newPassenger, location);
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -172,7 +172,7 @@ void passengerMenu(Application &application) {
      cin >> choice;
      if(choice == 1){
 
-         if(!application.findRide()){    //se o processamento dos dados retornar sucesso
+         if(application.findRide()){    //se o processamento dos dados retornar sucesso
              application.showResults(location, originPassenger, destinationPassenger);
              startMenu(application);
          }
@@ -188,7 +188,9 @@ void passengerMenu(Application &application) {
          string fileEdge = "../Maps/"+location+"Maps/"+lower_location+"_full_edges.txt";
          Graph<Coordinates> graph = mapParser(fileNode, fileEdge);
          vector<Coordinates> res = graph.bfs(originPassenger);
-         showGraph(&graph, res);
+         vector<int> poi;
+         poi.push_back(originPassenger);
+         showGraph(&graph, res, poi);
          getchar();
          startMenu(application);
      }
@@ -322,9 +324,9 @@ void driverMenu(Application &application) {
     //crasha se driverIDLength for maior que 10...
 
     Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTime, latestDepartureTime, maxDetourDistance, vehicleCapacity);
-    Driver *ptrToNewDriver = &newDriver;
-    application.addDriver(ptrToNewDriver);
-    application.updateDriverRecord(ptrToNewDriver, location);
+    //Driver *ptrToNewDriver = &newDriver;
+    application.addDriver(newDriver);
+    application.updateDriverRecord(newDriver, location);
 
 
     cout << "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl;
@@ -345,7 +347,7 @@ void driverMenu(Application &application) {
 
     if(choice == 1){
 
-        if(!application.findRide()){    //se o processamento dos dados retornar sucesso
+        if(application.findRide()){    //se o processamento dos dados retornar sucesso
             application.showResults(location, originDriver, destinationDriver);
             startMenu(application);
         }
@@ -361,10 +363,12 @@ void driverMenu(Application &application) {
         string fileEdge = "../Maps/"+location+"Maps/"+lower_location+"_full_edges.txt";
         Graph<Coordinates> graph = mapParser(fileNode, fileEdge);
         vector<Coordinates> res = graph.bfs(originDriver);
-        showGraph(&graph, res);
+        vector<int> poi;
+        poi.push_back(originDriver);
+        showGraph(&graph, res, poi);
         getchar();
         startMenu(application);
-    } startMenu(application);
+    }
 
 }
 

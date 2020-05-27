@@ -55,6 +55,5 @@ int main() {
     startMenu(application);
     cout << "Exited Successfully! :)" << endl;
 
-
     return 0;
 };
