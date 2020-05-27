@@ -90,6 +90,7 @@ bool Application::findRide() {
     return true;
 }
 
+
 int Application::showResults(string location, int origin, int destination){
 
     if(location == "Porto"){
@@ -271,6 +272,25 @@ void Application::loadPassengerDriverRecord(string location){
             getline(loadfileDriver, line);
             if (line=="\n"||line==""){
                 break;
+            counter++;
+            if (counter % 7 == 0) {
+                driverID = stoi(line);
+            } else if (counter % 7 == 1) {
+                originDriver = stoi(line);
+            } else if (counter % 7 == 2) {
+                destinationDriver = stoi(line);
+            } else if (counter % 7 == 3) {
+                earliestDepartureTimeDriver = stoi(line);
+            } else if (counter % 7 == 4) {
+                latestDepartureTimeDriver = stoi(line);
+            } else if (counter % 7 == 5) {
+                maxDetourDistance = stoi(line);
+            } else if (counter % 7 == 6) {
+                vehicleCapacity = stoi(line);
+                Driver newDriver(driverID, originDriver, destinationDriver, earliestDepartureTimeDriver,
+                                 latestDepartureTimeDriver, maxDetourDistance, vehicleCapacity);
+                Driver *ptrToNewDriver = &newDriver;
+                drivers.push_back(ptrToNewDriver);
             }
             driverID = stoi(line);
             getline(loadfileDriver, line);

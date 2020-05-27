@@ -38,6 +38,7 @@ class Vertex {
 
 	bool visited = false;		// auxiliary field
 	bool processing = false;	// auxiliary field
+	bool connected=false;       //auxiliary bfs
 
 	void addEdge(Vertex<T> *dest, double w);
 
@@ -139,9 +140,6 @@ class Graph {
     double ** v_distance = nullptr;//floyd-warshall
     int **path = nullptr;
 
-
-
-
 public:
     vector<T>duplicate_nodes;
 	Vertex<T> *findVertexByInfo(const T &in) const;
@@ -153,12 +151,15 @@ public:
 	vector<Vertex<T> *> getVertexSet() const;
 
     vector<T> nearestNeighbour(const T &origin, const T &destiny);
-
     int nearestNeighbourAux(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
 
 	//FP04
+    vector<Coordinates> bfs (const int &origin);
+    void BfsConectedGraph(const int &origin);
 
-    vector<T> dfs (const T &origin, const T &dest);
+    void DFSConnectedGraph(Vertex<T>* vertex, vector<int> &ids);
+    vector<int> dfsVector(const int orig);
+    vector<T> dfs(const T &origin, const T &dest);
     int dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res);
 
     // Fp05 - single source
@@ -167,16 +168,12 @@ public:
     void dijkstraShortestPathByID(const int s);
     vector<T> AStarShortestPathByInfo(const T &orig, const T &dest);
     vector<T> AStarShortestPathByID(const int orig, const int dest);
-    void bellmanFordShortestPath(const T &s);   //TODO...
 	vector<T> getPathTo(const T &dest) const;
 	vector<T> getPathToByID(const int dest) const;
 
 	// Fp05 - all pairs
-	void floydWarshallShortestPath();   //TODO...
-	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;   //TODO...
-
-	void filterGraph();
-
+	void floydWarshallShortestPath();
+	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;
 };
 
 
@@ -222,6 +219,11 @@ template <class T>
 bool Graph<T>::addVertex(const int given_id, const T &in) {
 	if ( findVertexByInfo(in) != NULL)
 		return false;
+	for(int i=0;i<vertexSet.size();i++){
+	    if (vertexSet[i]->id==given_id){
+	        return false;
+	    }
+	}
 	vertexSet.push_back(new Vertex<T>(given_id, in));
 	return true;
 }
@@ -250,6 +252,7 @@ bool Graph<T>::addEdgeByID(const int sourc, const int dest, double w) {
     v1->addEdge(v2,w);
     return true;
 }
+
 
 template <class T>
 void deleteMatrix(T **m, int n) {
@@ -415,9 +418,9 @@ vector<T> Graph<T>::AStarShortestPathByID(const int origin, const int destinatio
     }
     Vertex<T>* orig = findVertexByID(origin);
     Vertex<T>* dest = findVertexByID(destination);
+    Vertex<T>* v;
     orig->dist = euclideanDistance(orig->getInfo(), dest->info);
     q.insert(orig);
-    Vertex<T>* v;
 
     while(!q.empty()){
         v = q.extractMin();
@@ -440,7 +443,6 @@ vector<T> Graph<T>::AStarShortestPathByID(const int origin, const int destinatio
         }
     }
 
-
     vector<T> res;
     res.push_back(dest->info);
     v = dest;
@@ -450,35 +452,6 @@ vector<T> Graph<T>::AStarShortestPathByID(const int origin, const int destinatio
     }
     reverse(res.begin(), res.end());
     return res;
-}
-
-
-template<class T>
-void Graph<T>::bellmanFordShortestPath(const T &orig) {
-
-	for (auto vertex : vertexSet){
-	    vertex->dist = INT_MAX;
-	    vertex->path = NULL;
-	}
-	Vertex<T> *origin = findVertex(orig);
-	origin->dist = 0;
-	for (int i = 0; i < vertexSet.size() - 1; i++){
-	    for (auto vertex: vertexSet){
-	        for (Edge<T> edge: vertex->adj){
-	            if (edge.dest->dist > vertex->dist + edge.weight){
-                    edge.dest->dist = vertex->dist + edge.weight;
-                    edge.dest->path = vertex;
-	            }
-	        }
-	    }
-	}
-    for (auto vertex: vertexSet){
-        for (Edge<T> edge: vertex->adj){
-            if (edge.dest->dist > vertex->dist + edge.weight){
-                cout << "There are cycle of negative weight" << endl;
-            }
-        }
-    }
 }
 
 
@@ -569,6 +542,73 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
     return res;
 }
 
+/*
+ * Muda o grafo
+ */
+template <class T>
+void Graph<T>::DFSConnectedGraph(Vertex<T>* origin, vector<int> &ids){
+    Vertex<T>* vertex = findVertexByID(origin);
+    if (vertex == NULL)
+        return;
+    for (auto v : vertexSet) {
+        v->visited = false;
+    }
+    vertex->visited = true;
+    stack<Vertex<T>*> s;
+    s.push(vertex);
+
+    while(!s.empty()){
+        Vertex<T>* v = s.top();
+        s.pop();
+        for (auto e : v->outgoing){
+            Vertex<T>* dest = e.dest;
+            if (!dest->visited){
+                s.push(dest);
+                dest->visited = true;
+            }
+        }
+    }
+    for(auto i=vertexSet.begin();i!=vertexSet.end();i++){
+        if (!((*i)->visited)){
+            vertexSet.erase(i);
+            i--;
+        }
+    }
+}
+
+
+/*
+ * Returns the vector with the SCC vertex ids
+ */
+template <class T>
+vector<int> Graph<T>::dfsVector(const int orig){
+    vector<int> ids;
+    Vertex<T>* vertex = findVertexByID(orig);
+    if (vertex == NULL){
+        return ids;
+    }
+    for (auto v : vertexSet) {
+        v->visited = false;
+    }
+    vertex->visited = true;
+    stack<Vertex<T>*> s;
+    s.push(vertex);
+
+    while(!s.empty()){
+        Vertex<T>* v = s.top();
+        s.pop();
+        ids.push_back(v->id);
+        for (auto e : v->outgoing){
+            Vertex<T>* dest = e.dest;
+            if (!dest->visited){
+                s.push(dest);
+                dest->visited = true;
+            }
+        }
+    }
+    return ids;
+}
+
 
 template<class T>
 vector<T> Graph<T>::dfs(const T &origin, const T &dest) {
@@ -609,6 +649,68 @@ int Graph<T>::dfsVisit(Vertex<T> *origin, Vertex<T> *dest, vector<T> *res){
 }
 
 template<class T>
+vector<Coordinates> Graph<T>::bfs(const int &origin) {
+    vector<Coordinates> res;
+    auto s = findVertexByID(origin);
+    if (s == NULL)
+        return res;
+    queue<Vertex<T> *> q;
+    for (auto v : vertexSet)
+        v->visited = false;
+    q.push(s);
+    s->visited = true;
+    while (!q.empty()) {
+        auto v = q.front();
+        q.pop();
+        res.push_back(v->info);
+        for (auto & e : v->outgoing) {
+            auto w = e.dest;
+            if ( ! w->visited ) {
+                q.push(w);
+                w->visited = true;
+            }
+        }
+    }
+    return res;
+}
+
+template<class T>
+void Graph<T>::BfsConectedGraph(const int &origin) {
+    //Graph<Coordinates>res;
+
+    auto s = findVertexByID(origin);
+    if (s == NULL)
+        return;
+    queue<Vertex<T> *> q;
+    for (auto v : vertexSet)
+        v->visited = false;
+    q.push(s);
+    s->visited = true;
+    while (!q.empty()) {
+        auto v = q.front();
+        q.pop();
+        //res.addVertex(v->id,v->info);
+        for (auto & e : v->outgoing) {
+            auto w = e.dest;
+            //res.addVertex(w->id,w->info);
+            //res.addEdgeByID(v->id,w->id,e.weight);
+            if ( ! w->visited ) {
+                q.push(w);
+                w->visited = true;
+            }
+        }
+    }
+    for(auto i=vertexSet.begin();i!=vertexSet.end();i++){
+        if (!((*i)->visited)){
+            vertexSet.erase(i);
+            i--;
+        }
+    }
+    return;
+}
+
+
+template<class T>
 vector<T> Graph<T>::nearestNeighbour(const T &origin, const T &destiny){
     auto orig=findVertexByInfo(origin);
     auto dest=findVertexByInfo(destiny);
@@ -640,6 +742,7 @@ int Graph<T>::nearestNeighbourAux(Vertex<T> *origin, Vertex<T> *dest, vector<T> 
         }
     }
 }
+
 /*
 template<class T>
 vector<int> Graph<T>::twoOptSwap(const vector<int> &ord, const int &i, const int &k) {
@@ -681,5 +784,7 @@ vector<T> Graph<T>::twoOptHeuristic(vector<int> &ord, vector<T> &path) {
     return optimalPath;
 }
 */
+
+
 
 #endif /* GRAPH_H_ */
